@@ -1,0 +1,121 @@
+.sidebar_container {
+    height: calc(100vh - 69px);
+    padding: 0 10px 0;
+    overflow: auto;
+    overflow-x: hidden;
+    box-shadow: 0 2px 5px -1px rgba(41, 41, 77, 0.02), 0 1px 3px -1px rgba(0, 0, 0, .1);
+    transition: 0.4s;
+}
+
+.toggled-sidebar-container {
+    text-align: center;
+    transition: 0.4s;
+    width: 120px;
+    height: calc(100vh - 69px);
+    padding: 0 5px 0;
+    overflow: auto;
+    overflow-x: hidden;
+    box-shadow: 0 2px 5px -1px rgba(41, 41, 77, 0.02), 0 1px 3px -1px rgba(0, 0, 0, .1);
+}
+
+.sidebar_container::-webkit-scrollbar-track,
+.toggled-sidebar-container::-webkit-scrollbar-track {
+    border-radius: 0.125rem;
+    background-color: rgb(221, 220, 220);
+}
+
+.sidebar_container::-webkit-scrollbar,
+.toggled-sidebar-container::-webkit-scrollbar {
+    width: 0.25rem;
+    border-radius: 0.125rem;
+}
+
+.sidebar_container::-webkit-scrollbar-thumb,
+.toggled-sidebar-container::-webkit-scrollbar-thumb {
+    border-radius: 0.125rem;
+    background-color: gray;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    border-radius: 7px;
+    color: #4f5868;
+    font-size: 18px;
+    padding-left: 15px;
+    gap: 15px;
+    cursor: pointer;
+    margin-bottom: 2px;
+    transition: 0.4s;
+}
+
+.sidebar-item:hover {
+    background-color: rgba(8, 8, 224, 0.15);
+    color: #4f5868;
+}
+
+.toggled-sidebar-item:hover {
+    background-color: rgba(8, 8, 224, 0.15);
+    color: #4f5868;
+}
+
+.sidebar-group {
+    display: block !;
+}
+
+.sidebar-group {
+    margin-left: 5px;
+    margin-bottom: 5px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: #4f5868;
+}
+
+.active-sidebar {
+    background-color: rgb(205, 205, 236);
+    color: #4f5868;
+}
+
+.sidebar-toggled-group {
+    display: none;
+}
+
+.toggled-sidebar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+    border-radius: 7px;
+    color: #4f5868;
+    font-size: 14px;
+    /* padding-left: 15px; */
+    gap: 10px;
+    cursor: pointer;
+    margin-bottom: 2px;
+    transition: 0.4s;
+}
+
+.toggled-sidebar-item>p {
+    margin: 0;
+}
+
+.sidebar-toggle-button,
+.toggled-sidebar-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    color: #4f5868;
+    position: sticky;
+    z-index: 10;
+    border-radius: 5px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(205, 205, 236);
+    height: 35px;
+    transition: 0.4s;
+    width: 100%;
+}
