@@ -4,7 +4,7 @@ import React from 'react';
 function TableComponent({ dataSource, columns, pagination, active, loading }) {
     return (
         <Table
-            rowClassName={(record, rowIndex) => record.id == active && 'active-row'}
+            rowClassName={(record, rowIndex) => record._id == active && 'active-row'}
             dataSource={dataSource}
             columns={columns}
             pagination={pagination}

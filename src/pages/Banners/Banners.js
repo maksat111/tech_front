@@ -42,28 +42,22 @@ function Banners(props) {
     };
 
     useEffect(() => {
-        axiosInstance.get('banners/list').then(res => {
-            const a = [];
-            res?.data.forEach(item => {
-                a.push({
-                    key: item.id,
-                    id: item.id,
-                    image: item.image,
-                    active: item.active
-                })
+        axiosInstance.get('banner/list').then(res => {
+            res?.data.data.forEach(item => {
+                item.key = item._id
             });
-            setDataSource(a);
+            setDataSource(res.data.data);
         }).catch(err => console.log(err));
     }, []);
 
     const columns = [
-        {
-            title: 'id',
-            dataIndex: 'id',
-            key: 'id',
-            width: '65px',
-            style: { alignItems: "center" }
-        },
+        // {
+        //     title: 'id',
+        //     dataIndex: '_id',
+        //     key: '_id',
+        //     width: '65px',
+        //     style: { display: "none" }
+        // },
         {
             title: 'Banner image',
             dataIndex: 'image',
@@ -71,6 +65,11 @@ function Banners(props) {
             render: (_, record) => (
                 <img className='banner-image' src={record.image} alt='banner' />
             ),
+        },
+        {
+            title: 'URL',
+            dataIndex: 'url',
+            key: 'url',
         },
         {
             title: 'Active',
@@ -114,8 +113,8 @@ function Banners(props) {
     const handleOk = async () => {
         try {
             setConfirmLoading(true);
-            const res = await axiosInstance.delete(`banners/delete/${selectedItem.id}`);
-            const newDataSource = dataSource.filter(element => element.id !== selectedItem.id);
+            const res = await axiosInstance.delete(`banner/delete/${selectedItem._id}`);
+            const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
             setDataSource(newDataSource);
             message.success('Успешно удалено')
             setOpen(false);
@@ -140,10 +139,10 @@ function Banners(props) {
     const handleActiveOk = async () => {
         try {
             setConfirmLoading(true);
-            const res = await axiosInstance.patch(`banners/update/${selectedItem.id}/`, { active: !selectedItem.active });
+            const res = await axiosInstance.patch(`banner/update/${selectedItem._id}/`, { active: !selectedItem.active });
             setDataSource(previousState => {
                 let a = previousState;
-                const index = a.findIndex(element => element.id === selectedItem.id);
+                const index = a.findIndex(element => element._id === selectedItem._id);
                 a[index].active = !a[index].active
                 return a
             });
@@ -172,12 +171,13 @@ function Banners(props) {
             const formData = new FormData();
             formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
             formData.append("active", newItemActive);
-            const res = await axiosInstance.post(`banners/add/`, formData);
+            const res = await axiosInstance.post(`banner/add/`, formData);
             let a = {
                 key: fileList[0].originFileObj.uid,
-                id: res.data.id,
+                id: res.data.data._id,
                 image: URL.createObjectURL(fileList[0].originFileObj),
-                active: newItemActive
+                active: newItemActive,
+                url: res.data.data.url
             }
             setDataSource([...dataSource, a]);
             message.success('Успешно добавлено');
@@ -224,10 +224,10 @@ function Banners(props) {
 
     const handleUpdateOk = async () => {
         try {
-            await axiosInstance.put(`banners/update/${selectedItem.id}/`)
+            await axiosInstance.patch(`banner/update/${selectedItem._id}/`)
             setDataSource(previousState => {
                 const a = previousState;
-                const index = a.findIndex(element => element.id === selectedItem.id);
+                const index = a.findIndex(element => element._id === selectedItem._id);
                 a[index].image = URL.createObjectURL(fileList[0].originFileObj);
                 return a;
             })
@@ -395,7 +395,7 @@ function Banners(props) {
                     <h2>Баннеры</h2>
                     <div className='add-button' onClick={showAddModal}>Добавлять</div>
                 </div>
-                <TableComponent dataSource={dataSource} columns={columns} pagination={false} active={selectedItem?.id} />
+                <TableComponent dataSource={dataSource} columns={columns} pagination={false} active={selectedItem?._id} />
             </div>
         </>
     );
