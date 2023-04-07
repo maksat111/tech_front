@@ -1,0 +1,12 @@
+.brand-image {
+    height: 120px;
+    width: 200px;
+}
+
+.add-picture {
+    display: flex;
+    align-items: center;
+    height: 150px;
+    width: 120px;
+    gap: 25px;
+}

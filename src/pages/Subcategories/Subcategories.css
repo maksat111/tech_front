@@ -1,0 +1,12 @@
+.subcategory-image {
+    width: 150px;
+    height: 150px;
+}
+
+.add-picture {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    height: 150px;
+    width: 120px;
+}

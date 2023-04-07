@@ -5,9 +5,162 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  max-height: 100vh;
+  max-width: 100vw;
+}
+
+.ant-btn-primary {
+  background-color: rgb(8, 8, 224);
+}
+
+.ant-btn-primary:not(:disabled):hover {
+  background-color: rgb(45, 45, 240);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.page {
+  padding: 15px;
+  width: 100%;
+  overflow: auto;
+  height: calc(100vh - 94px);
+}
+
+.page::-webkit-scrollbar-track {
+  border-radius: 0.125rem;
+  background-color: rgb(221, 220, 220);
+}
+
+.page::-webkit-scrollbar {
+  width: 0.4rem;
+  border-radius: 0.125rem;
+}
+
+.page::-webkit-scrollbar-thumb {
+  border-radius: 0.125rem;
+  background-color: gray;
+}
+
+.loading-spin {
+  animation: spin 0.9s infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.delete-icon,
+.update-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  padding: 5px 10px;
+  width: fit-content;
+  height: fit-content;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.delete-icon {
+  background-color: red;
+}
+
+.delete-icon:hover {
+  background-color: rgb(255, 77, 77);
+}
+
+.update-icon {
+  background-color: rgb(8, 8, 224);
+}
+
+.update-icon:hover {
+  background-color: rgb(55, 55, 238);
+}
+
+.ant-btn-primary.ant-btn-dangerous {
+  background-color: red;
+}
+
+.ant-btn-primary.ant-btn-dangerous:hover {
+  background-color: red;
+}
+
+.pagination-button {
+  cursor: pointer;
+  text-align: center;
+  width: 150px;
+  padding: 5px 10px;
+  border-radius: 7px;
+  background-color: rgb(8, 8, 224);
+  color: white;
+  /* border: rgb(8, 8, 224) 1px solid; */
+  margin: 20px auto 0px;
+  transition: 0.4s;
+}
+
+.pagination-button:hover {
+  background-color: rgb(55, 55, 238);
+}
+
+.add-button {
+  background-color: rgb(8, 8, 224);
+  cursor: pointer;
+  color: #ffffff;
+  padding: 7px 10px;
+  border-radius: 7px;
+}
+
+.page-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.active-row {
+  border: 10px gray solid;
+  background-color: rgb(238, 236, 236);
+  border-radius: 5px;
+}
+
+.ant-pagination .ant-pagination-options {
+  display: none;
+}
+
+.add-column {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+  min-height: 40px;
+}
+
+.banner-add-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  font-weight: 450;
+}
+
+.add-right {
+  min-width: 370px;
+}
+
+.ant-table-fixed {
+  table-layout: fixed;
+}
+
+.ant-table-tbody>tr>td {
+  word-wrap: break-word;
+  word-break: break-all;
 }
