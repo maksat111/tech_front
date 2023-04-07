@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken } from '../utils/getToken';
 
 const token = getToken();
-const BASE_URL = 'https://turkmenexpress.com.tm/api/administrator/';
+const BASE_URL = 'http://127.0.0.1:5000/api/admin/';
 
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -10,12 +10,12 @@ const axiosInstance = axios.create({
     headers: {
         'Content-Type': 'multipart/form-data',
         'Accept': "application/json",
-        "Authorization": `Bearer ${token}`
+        "x-access-token": `${token}`
     }
 });
 
-const loginPost = async (phone_number, password) => {
-    const res = await axios.post(`${BASE_URL}login/`, { phone_number, password });
+const loginPost = async (username, password) => {
+    const res = await axios.post(`${BASE_URL}login`, { username, password });
     return res;
 }
 export { axiosInstance, loginPost } 

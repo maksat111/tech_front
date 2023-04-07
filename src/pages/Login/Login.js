@@ -17,12 +17,12 @@ const Login = () => {
         setLoading(true);
         try {
             const res = await loginPost(username, password);
-            localStorage.setItem('turkmenExpress-admin', JSON.stringify(res.data));
+            localStorage.setItem('ertir-admin', JSON.stringify(res.data.data));
             message.success('Successfully!');
             setLoading(false);
             window.location.pathname = '/dashboard';
         } catch (err) {
-            err.response?.data?.detail ? message.error(err.response.data.detail) : message.error('ошибка, попробуйте еще раз, пожалуйста');
+            err.response?.data?.msg ? message.error(err.response.data.msg) : message.error('ошибка, попробуйте еще раз, пожалуйста');
             setLoading(false);
         }
     }

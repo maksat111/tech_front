@@ -14,7 +14,7 @@ function PageLoading() {
         <div className='pageLoading-container'>
             <img src={Logo} alt='Turkmen Express' />
             <BeatLoader
-                color={'red'}
+                color={'blue'}
                 loading={true}
                 width={'400px'}
             />

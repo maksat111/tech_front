@@ -83,7 +83,7 @@ input {
 }
 
 .logo {
-    height: 400px;
+    height: 500px;
 }
 
 .login_page {
@@ -100,7 +100,7 @@ input {
 }
 
 .login-container img {
-    height: 60px;
-    margin-top: -20px;
-    margin-bottom: -10px;
+    height: 90px;
+    margin-top: -35px;
+    margin-bottom: -20px;
 }
