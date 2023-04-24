@@ -128,7 +128,8 @@ function Sections() {
                 })
             } else {
                 const res = await axiosInstance.post('section/create', formData);
-                newItem._id = res.data?._id;
+                newItem._id = res.data.data?._id;
+                newItem.created_at = res.data.data?.created_at;
                 setDataSource([...dataSource, newItem])
             }
             setConfirmLoading(false);

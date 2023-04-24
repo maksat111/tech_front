@@ -28,6 +28,14 @@ function Router() {
                     element: <Suspense fallback={<Loading />}><Sections /></Suspense>,
                     path: '/sections'
                 },
+                {
+                    element: <Suspense fallback={<Loading />}><News /></Suspense>,
+                    path: '/news'
+                },
+                {
+                    element: <Suspense fallback={<Loading />}><Users /></Suspense>,
+                    path: '/users'
+                },
             ]
         },
         {

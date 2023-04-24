@@ -8,7 +8,7 @@ import Input from 'antd/es/input/Input';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
-function Sections() {
+function Users() {
     const dateFormat = 'YYYY-MM-DD';
     const [dataSource, setDataSource] = useState([]);
     const [open, setOpen] = useState(false);
@@ -29,8 +29,8 @@ function Sections() {
     const handleOk = async () => {
         try {
             setConfirmLoading(true);
-            await axiosInstance.delete(`coupon-type/delete/${selectedItem.id}`);
-            const newDataSource = dataSource.filter(element => element.id !== selectedItem.id);
+            await axiosInstance.delete(`user/delete/${selectedItem._id}/`);
+            const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
             setDataSource(newDataSource);
             message.success('Успешно удалено!');
             setSelectedItem(null);
@@ -49,45 +49,34 @@ function Sections() {
     };
 
     useEffect(() => {
-        axiosInstance.get('coupon-type/list').then(res => {
-            res.data?.forEach(element => {
-                element.key = element.id
+        axiosInstance.get('user/list').then(res => {
+            res.data.data.forEach(element => {
+                element.key = element._id
             });
-            setDataSource(res?.data);
+            setDataSource(res.data.data);
         }).catch(err => console.log(err));
     }, []);
 
     const columns = [
         {
-            title: 'Номер',
-            dataIndex: 'number',
-            key: 'number',
-            width: '65px',
+            title: 'Имя',
+            dataIndex: 'name',
+            key: 'name',
         },
         {
-            title: 'Название (рус.)',
-            dataIndex: 'name_ru',
-            key: 'name_ru',
+            title: 'Фамилия',
+            dataIndex: 'surname',
+            key: 'surname',
         },
         {
-            title: 'Название (туркм.)',
-            dataIndex: 'name_tk',
-            key: 'name_tk',
+            title: 'Пользователь',
+            dataIndex: 'username',
+            key: 'username',
         },
         {
-            title: 'Навзание (анг.)',
-            dataIndex: 'name_en',
-            key: 'name_en',
-        },
-        {
-            title: 'От числа',
-            dataIndex: 'from_date',
-            key: 'from_date',
-        },
-        {
-            title: 'До числа',
-            dataIndex: 'to_date',
-            key: 'to_date',
+            title: 'Дата создания',
+            dataIndex: 'created_at',
+            key: 'created_at',
         },
         {
             title: 'Удалить',
@@ -115,9 +104,7 @@ function Sections() {
 
     //---------------------------------------------------ADD MODAL-------------------------------------------//
     const showAddModal = (item) => {
-        if (item.id) {
-            setFromDate(date.format(new Date(item.from_date), 'YYYY-MM-DD'));
-            setToDate(date.format(new Date(item.to_date), 'YYYY-MM-DD'));
+        if (item._id) {
             setNewItem(item);
             setSelectedItem(item);
         };
@@ -127,36 +114,31 @@ function Sections() {
     const handleAddOk = async () => {
         setConfirmLoading(true);
         const formData = new FormData();
-        newItem.from_date = fromDate;
-        newItem.to_date = toDate;
         const keys = Object.keys(newItem);
         const values = Object.values(newItem);
         keys.forEach((key, index) => {
             formData.append(key, values[index]);
         })
         try {
-            if (newItem.id) {
-                const res = await axiosInstance.put(`coupon-type/update/${newItem.id}/`, formData);
-                const index = dataSource.findIndex(item => item.id == newItem.id);
+            if (newItem._id) {
+                const res = await axiosInstance.patch(`user/update/${newItem._id}`, formData);
+                const index = dataSource.findIndex(item => item._id == newItem._id);
                 setDataSource(previousState => {
                     const a = previousState;
-                    a[index].name_ru = newItem.name_ru;
-                    a[index].name_en = newItem.name_en;
-                    a[index].name_tk = newItem.name_tk;
-                    a[index].number = newItem.number;
-                    a[index].from_date = fromDate;
-                    a[index].toDate = toDate;
+                    a[index].name = newItem.name;
+                    a[index].surname = newItem.surname;
+                    a[index].username = newItem.usersurname;
                     return a;
                 })
             } else {
-                const res = await axiosInstance.post('coupon-type/add/', formData);
-                newItem.id = res.data?.id;
+                const res = await axiosInstance.post('user/create', formData);
+                newItem._id = res.data.data?._id;
+                newItem.key = res.data.data?._id;
+                newItem.created_at = res.data.data?.created_at;
                 setDataSource([...dataSource, newItem])
             }
             setConfirmLoading(false);
             setNewItem(null);
-            setFromDate(null);
-            setToDate(null);
             message.success('Успешно!');
             setAddOpen(false);
         } catch (err) {
@@ -168,8 +150,6 @@ function Sections() {
 
     const handleAddCancel = () => {
         setAddOpen(false);
-        setToDate(null);
-        setFromDate(null);
         setNewItem(null);
     };
 
@@ -194,42 +174,30 @@ function Sections() {
                 <div className='banner-add-container'>
                     <div className='add-left'>
                         <div className='add-column'>
-                            Номер:
+                            Имя:
                         </div>
                         <div className='add-column'>
-                            Название (рус.):
+                            Фамилия:
                         </div>
                         <div className='add-column'>
-                            Название (туркм.):
+                            Пользователь:
                         </div>
                         <div className='add-column'>
-                            Навзание (анг.):
-                        </div>
-                        <div className='add-column'>
-                            От числа:
-                        </div>
-                        <div className='add-column'>
-                            До числв:
+                            Пароль:
                         </div>
                     </div>
                     <div className='add-right'>
                         <div className='add-column'>
-                            <Input name='number' type='number' placeholder='Номер' value={newItem?.number} onChange={handleAddChange} />
+                            <Input name='name' placeholder='Имя' value={newItem?.name} onChange={handleAddChange} />
                         </div>
                         <div className='add-column'>
-                            <Input name='name_ru' placeholder='Название (рус.)' value={newItem?.name_ru} onChange={handleAddChange} />
+                            <Input name='surname' placeholder='Фамилия' value={newItem?.surname} onChange={handleAddChange} />
                         </div>
                         <div className='add-column'>
-                            <Input name='name_tk' placeholder='Название (туркм.)' value={newItem?.name_tk} onChange={handleAddChange} />
+                            <Input name='username' placeholder='Пользователь' value={newItem?.username} onChange={handleAddChange} />
                         </div>
                         <div className='add-column'>
-                            <Input name='name_en' placeholder='Название (анг.)' value={newItem?.name_en} onChange={handleAddChange} />
-                        </div>
-                        <div className='add-column'>
-                            <DatePicker value={fromDate && dayjs(fromDate, dateFormat)} onChange={(d, datestring) => setFromDate(date.format(new Date(d), 'YYYY-MM-DD'))} />
-                        </div>
-                        <div className='add-column'>
-                            <DatePicker value={toDate && dayjs(toDate, dateFormat)} onChange={(d, datestring) => setToDate(date.format(new Date(d), 'YYYY-MM-DD'))} />
+                            <Input name='password' placeholder='Пароль' value={newItem?.password} onChange={handleAddChange} />
                         </div>
                     </div>
                 </div>
@@ -250,7 +218,7 @@ function Sections() {
             />
             <div className='page'>
                 <div className='page-header-content'>
-                    <h2>Виды купонов</h2>
+                    <h2> Пользователи</h2>
                     <div className='add-button' onClick={showAddModal}>Добавить</div>
                 </div>
                 <TableComponent dataSource={dataSource} columns={columns} pagination={false} active={selectedItem?.id} />
@@ -259,4 +227,4 @@ function Sections() {
     );
 }
 
-export default Sections;
+export default Users;
