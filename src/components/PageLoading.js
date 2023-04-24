@@ -17,6 +17,7 @@ function PageLoading() {
                 color={'blue'}
                 loading={true}
                 width={'400px'}
+                style={{ marginTop: '-50px' }}
             />
         </div>
     );

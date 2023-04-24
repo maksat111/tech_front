@@ -3,7 +3,7 @@ import { Checkbox, message, Progress } from 'antd';
 import TableComponent from '../../components/TableComponent';
 import { axiosInstance } from '../../config/axios';
 import { PlusOutlined } from '@ant-design/icons';
-import './Banners.css';
+import './News.css';
 import { Modal, Upload } from 'antd';
 
 const getBase64 = (file) =>

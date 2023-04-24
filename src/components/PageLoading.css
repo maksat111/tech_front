@@ -6,3 +6,7 @@
     /* width: 95vw; */
     height: 90vh;
 }
+
+.pageLoading-container>img {
+    height: 270px;
+}

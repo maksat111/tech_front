@@ -1,21 +1,24 @@
 import { React, useEffect, useState } from 'react';
-import { Modal } from 'antd';
-import { Checkbox, message } from 'antd';
+import { DatePicker, Modal, message } from 'antd';
+import dayjs from 'dayjs';
+import date from 'date-and-time';
 import { axiosInstance } from '../../config/axios';
 import TableComponent from '../../components/TableComponent';
 import Input from 'antd/es/input/Input';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
-function ClientType() {
+function Sections() {
+    const dateFormat = 'YYYY-MM-DD';
     const [dataSource, setDataSource] = useState([]);
     const [open, setOpen] = useState(false);
+    const today = date.format(new Date(), 'YYYY-MM-DD');
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [addOpen, setAddOpen] = useState(false);
-    const [newItem, setNewItem] = useState({
-        name_ru: '',
-        name_en: '',
-        name_tk: '',
-    })
+    const [fromDate, setFromDate] = useState(null);
+    const [toDate, setToDate] = useState(null);
+    const [newItem, setNewItem] = useState(null);
 
 
     const showModal = (item) => {
@@ -26,10 +29,11 @@ function ClientType() {
     const handleOk = async () => {
         try {
             setConfirmLoading(true);
-            await axiosInstance.delete(`users/types/delete/${selectedItem.id}/`);
-            const newDataSource = dataSource.filter(element => element.id !== selectedItem.id);
+            await axiosInstance.delete(`section/delete/${selectedItem._id}/`);
+            const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
             setDataSource(newDataSource);
-            message.success('Успешно удалено')
+            message.success('Успешно удалено!');
+            setSelectedItem(null);
             setOpen(false);
             setConfirmLoading(false);
         } catch (err) {
@@ -41,25 +45,21 @@ function ClientType() {
 
     const handleCancel = () => {
         setOpen(false);
+        setSelectedItem(null);
     };
 
     useEffect(() => {
-        axiosInstance.get('users/types/list/').then(res => {
-            res.data?.forEach(element => {
-                element.key = element.id
+        axiosInstance.get('section/list').then(res => {
+            console.log(res.data.data)
+            res.data.data.forEach(element => {
+                element.key = element._id
+                // element.created_at = date.format(element.created_at, 'YYYY-MM-DD')
             });
-            setDataSource(res?.data);
+            setDataSource(res.data.data);
         }).catch(err => console.log(err));
     }, []);
 
     const columns = [
-        {
-            title: 'id',
-            dataIndex: 'id',
-            key: 'id',
-            width: '65px',
-            style: { alignItems: "center" }
-        },
         {
             title: 'Название (рус.)',
             dataIndex: 'name_ru',
@@ -67,13 +67,13 @@ function ClientType() {
         },
         {
             title: 'Название (туркм.)',
-            dataIndex: 'name_tk',
-            key: 'name_tk',
+            dataIndex: 'name_tm',
+            key: 'name_tm',
         },
         {
-            title: 'Навзание (анг.)',
-            dataIndex: 'name_en',
-            key: 'name_en',
+            title: 'Дата создания',
+            dataIndex: 'created_at',
+            key: 'created_at',
         },
         {
             title: 'Удалить',
@@ -90,7 +90,7 @@ function ClientType() {
             title: 'Изменить',
             dataIndex: 'active',
             key: 'active',
-            width: '120px',
+            width: '125px',
             render: (_, record) => (
                 <div className='update-icon' onClick={() => showAddModal(record)}>
                     Изменить
@@ -99,10 +99,12 @@ function ClientType() {
         },
     ];
 
-    //---------------------------------------------------ADD && UPDATE MODAL-------------------------------------------//
+    //---------------------------------------------------ADD MODAL-------------------------------------------//
     const showAddModal = (item) => {
-        // setSelectedItem(item);
-        item.id && setNewItem(item);
+        if (item._id) {
+            setNewItem(item);
+            setSelectedItem(item);
+        };
         setAddOpen(true);
     };
 
@@ -115,24 +117,23 @@ function ClientType() {
             formData.append(key, values[index]);
         })
         try {
-            if (newItem.id) {
-                const res = await axiosInstance.put(`users/types/update/${newItem.id}/`, formData);
-                const index = dataSource.findIndex(item => item.id == newItem.id);
+            if (newItem._id) {
+                const res = await axiosInstance.patch(`section/update/${newItem._id}`, formData);
+                const index = dataSource.findIndex(item => item._id == newItem._id);
                 setDataSource(previousState => {
                     const a = previousState;
                     a[index].name_ru = newItem.name_ru;
                     a[index].name_en = newItem.name_en;
-                    a[index].name_tk = newItem.name_tk;
                     return a;
                 })
             } else {
-                const res = await axiosInstance.post('users/types/add/', formData);
-                res.data.key = res.data.id;
-                setDataSource([...dataSource, res.data]);
+                const res = await axiosInstance.post('section/create', formData);
+                newItem._id = res.data?._id;
+                setDataSource([...dataSource, newItem])
             }
-            setNewItem(null);
             setConfirmLoading(false);
-            message.success('Успешно')
+            setNewItem(null);
+            message.success('Успешно!');
             setAddOpen(false);
         } catch (err) {
             setConfirmLoading(false)
@@ -142,8 +143,8 @@ function ClientType() {
     };
 
     const handleAddCancel = () => {
-        setNewItem(null);
         setAddOpen(false);
+        setNewItem(null);
     };
 
     const handleAddChange = (e) => {
@@ -172,19 +173,13 @@ function ClientType() {
                         <div className='add-column'>
                             Название (туркм.):
                         </div>
-                        <div className='add-column'>
-                            Навзание (анг.):
-                        </div>
                     </div>
                     <div className='add-right'>
                         <div className='add-column'>
                             <Input name='name_ru' placeholder='Название (рус.)' value={newItem?.name_ru} onChange={handleAddChange} />
                         </div>
                         <div className='add-column'>
-                            <Input name='name_tk' placeholder='Название (туркм.)' value={newItem?.name_tk} onChange={handleAddChange} />
-                        </div>
-                        <div className='add-column'>
-                            <Input name='name_en' placeholder='Название (анг.)' value={newItem?.name_en} onChange={handleAddChange} />
+                            <Input name='name_tm' placeholder='Название (туркм.)' value={newItem?.name_tm} onChange={handleAddChange} />
                         </div>
                     </div>
                 </div>
@@ -205,13 +200,13 @@ function ClientType() {
             />
             <div className='page'>
                 <div className='page-header-content'>
-                    <h2>Типы покупателей</h2>
-                    <div className='add-button' onClick={showAddModal}>Добавлять</div>
+                    <h2>Разделы</h2>
+                    <div className='add-button' onClick={showAddModal}>Добавить</div>
                 </div>
-                <TableComponent dataSource={dataSource} columns={columns} pagination={false} />
+                <TableComponent dataSource={dataSource} columns={columns} pagination={false} active={selectedItem?.id} />
             </div>
         </>
     );
 }
 
-export default ClientType;
+export default Sections;

@@ -1,18 +1,19 @@
 .sidebar_container {
-    height: calc(100vh - 69px);
-    padding: 0 10px 0;
+    height: calc(100vh - 88px);
+    padding: 10px 10px 10px;
     overflow: auto;
     overflow-x: hidden;
     box-shadow: 0 2px 5px -1px rgba(41, 41, 77, 0.02), 0 1px 3px -1px rgba(0, 0, 0, .1);
     transition: 0.4s;
+    width: 230px;
 }
 
 .toggled-sidebar-container {
     text-align: center;
     transition: 0.4s;
     width: 120px;
-    height: calc(100vh - 69px);
-    padding: 0 5px 0;
+    height: calc(100vh - 88px);
+    padding: 10px;
     overflow: auto;
     overflow-x: hidden;
     box-shadow: 0 2px 5px -1px rgba(41, 41, 77, 0.02), 0 1px 3px -1px rgba(0, 0, 0, .1);

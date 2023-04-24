@@ -8,7 +8,7 @@ import Input from 'antd/es/input/Input';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
-function CouponType() {
+function Sections() {
     const dateFormat = 'YYYY-MM-DD';
     const [dataSource, setDataSource] = useState([]);
     const [open, setOpen] = useState(false);
@@ -104,7 +104,7 @@ function CouponType() {
             title: 'Изменить',
             dataIndex: 'active',
             key: 'active',
-            width: '120px',
+            width: '125px',
             render: (_, record) => (
                 <div className='update-icon' onClick={() => showAddModal(record)}>
                     Изменить
@@ -251,7 +251,7 @@ function CouponType() {
             <div className='page'>
                 <div className='page-header-content'>
                     <h2>Виды купонов</h2>
-                    <div className='add-button' onClick={showAddModal}>Добавлять</div>
+                    <div className='add-button' onClick={showAddModal}>Добавить</div>
                 </div>
                 <TableComponent dataSource={dataSource} columns={columns} pagination={false} active={selectedItem?.id} />
             </div>
@@ -259,4 +259,4 @@ function CouponType() {
     );
 }
 
-export default CouponType;
+export default Sections;
