@@ -203,7 +203,7 @@ function Banners(props) {
                 res.data.data._id = res.data.data._id;
                 res.data.data.key = fileList[0].originFileObj.uid;
                 res.data.data.image = URL.createObjectURL(fileList[0].originFileObj);
-                res.data.data.section = res.data.data.section == null ? '-' : res.data.data.section.name_ru;
+                res.data.data.section = selected.label;
                 res.data.data.phone_number = res.data.data.phone_number == null ? '-' : res.data.data.phone_number;
                 res.data.data.author = res.data.data.author == null ? '-' : res.data.data.author;
                 setDataSource([...dataSource, res.data.data]);
