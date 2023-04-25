@@ -17,9 +17,7 @@ const getBase64 = (file) =>
 function Banners(props) {
     const [dataSource, setDataSource] = useState([]);
     const [open, setOpen] = useState(false);
-    const [openUpdate, setOpenUpdate] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
-    const [confirmUpdateLoading, setConfirmUpdateLoading] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
@@ -30,6 +28,7 @@ function Banners(props) {
     const [newItem, setNewItem] = useState(null);
     const [selected, setSelected] = useState(null);
     const [options, setOptions] = useState(null);
+    const [total, setTotal] = useState(null);
 
     const handlePreviewCancel = () => setPreviewOpen(false);
 
@@ -44,6 +43,7 @@ function Banners(props) {
 
     useEffect(() => {
         axiosInstance.get('news/list').then(async res => {
+            setTotal(res.data.count)
             res?.data.data.forEach(item => {
                 item.key = item._id;
                 item.image = 'http://127.0.0.1:5000/' + item.image;
@@ -269,6 +269,18 @@ function Banners(props) {
         setSelected(filtered[0]);
     }
 
+    const onPaginationChange = async (page) => {
+        const res = await axiosInstance.get(`news/list?page=${page}`);
+        res.data.data?.forEach(item => {
+            item.key = item._id;
+            item.image = 'http://127.0.0.1:5000/' + item.image;
+            item.section = item.section == null ? '-' : item.section.name_ru;
+            item.phone_number = item.phone_number == null ? '-' : item.phone_number;
+            item.author = item.author == null ? '-' : item.author;
+        });
+        setDataSource(res.data.data);
+    }
+
     return (
         <>
             <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handlePreviewCancel} centered zIndex={'1001'}>
@@ -383,10 +395,14 @@ function Banners(props) {
             />
             <div className='banners-container page'>
                 <div className='banners-header-container'>
-                    <h2>Новости</h2>
+                    <h2>{`Новости (${total})`}</h2>
                     <div className='add-button' onClick={showAddModal}>Добавлять</div>
                 </div>
-                <TableComponent dataSource={dataSource} columns={columns} pagination={false} active={selectedItem?._id} />
+                <TableComponent
+                    dataSource={dataSource}
+                    columns={columns}
+                    pagination={{ onChange: onPaginationChange, total: total, pageSize: 20, position: ['bottomRight'] }}
+                    active={selectedItem?._id} />
             </div>
         </>
     );
