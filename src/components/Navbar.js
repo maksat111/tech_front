@@ -14,7 +14,7 @@ function Navbar() {
 
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem('ertir-admin'));
-        setProfileName(data.name + " " + data.surname);
+        setProfileName(data?.name + " " + data?.surname);
     }, [])
 
     const userStyle = { fontSize: '24px' };

@@ -1,5 +1,5 @@
 export const isLogin = () => {
-    const token = localStorage.getItem('turkmenExpress-admin');
+    const token = localStorage.getItem('ertir-admin');
     if (token) {
         return true;
     }
