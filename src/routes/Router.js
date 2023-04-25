@@ -8,6 +8,7 @@ const Banners = lazy(() => import('../pages/Banners/Banners'));
 const Sections = lazy(() => import('../pages/Sections/Sections'));
 const News = lazy(() => import('../pages/News/News'));
 const Users = lazy(() => import('../pages/Users/Users'));
+const AboutUs = lazy(() => import('../pages/AboutUs/AboutUs'));
 
 const SideBarNavbar = lazy(() => import('./SidebarNavbar'));
 
@@ -35,6 +36,10 @@ function Router() {
                 {
                     element: <Suspense fallback={<Loading />}><Users /></Suspense>,
                     path: '/users'
+                },
+                {
+                    element: <Suspense fallback={<Loading />}><AboutUs /></Suspense>,
+                    path: '/aboutUs'
                 },
             ]
         },

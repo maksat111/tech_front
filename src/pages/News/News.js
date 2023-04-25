@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Checkbox, message, Progress } from 'antd';
+import { message, Input, Select } from 'antd';
 import TableComponent from '../../components/TableComponent';
 import { axiosInstance } from '../../config/axios';
 import { PlusOutlined } from '@ant-design/icons';
@@ -27,8 +27,9 @@ function Banners(props) {
     const [previewTitle, setPreviewTitle] = useState('');
     const [fileList, setFileList] = useState([]);
     const [progress, setProgress] = useState(0);
-    const [newItemActive, setNewItemActive] = useState(true);
-    const [openActive, setOpenActive] = useState(false);
+    const [newItem, setNewItem] = useState(null);
+    const [selected, setSelected] = useState(null);
+    const [options, setOptions] = useState(null);
 
     const handlePreviewCancel = () => setPreviewOpen(false);
 
@@ -42,36 +43,72 @@ function Banners(props) {
     };
 
     useEffect(() => {
-        axiosInstance.get('banner/list').then(res => {
+        axiosInstance.get('news/list').then(async res => {
             res?.data.data.forEach(item => {
                 item.key = item._id;
-                item.image = 'http://216.250.10.118/' + item.image;
+                item.image = 'http://127.0.0.1:5000/' + item.image;
+                item.section = item.section == null ? '-' : item.section.name_ru;
+                item.phone_number = item.phone_number == null ? '-' : item.phone_number;
+                item.author = item.author == null ? '-' : item.author;
             });
             setDataSource(res.data.data);
+
+            const options = await axiosInstance.get('section/list');
+            const a = [];
+            options.data.data.forEach(item => {
+                a.push({
+                    label: item.name_ru,
+                    value: item.name_ru,
+                    _id: item._id,
+                });
+            })
+            setOptions(a);
         }).catch(err => console.log(err));
     }, []);
 
     const columns = [
         {
-            title: 'Banner image',
+            title: 'Изображение',
             dataIndex: 'image',
             key: 'image',
             render: (_, record) => (
-                <img className='banner-image' src={record.image} alt='banner' />
+                <img className='banner-image' src={record.image} alt='Image' />
             ),
         },
         {
-            title: 'URL',
-            dataIndex: 'url',
-            key: 'url',
+            title: 'Раздел',
+            dataIndex: 'section',
+            key: 'section',
         },
         {
-            title: 'Active',
-            dataIndex: 'active',
-            key: 'active',
-            render: (_, record) => (
-                <Checkbox name='late' checked={record.active} onChange={() => showActiveModal(record)} />
-            ),
+            title: 'Заголовок (рус.)',
+            dataIndex: 'title_ru',
+            key: 'title_ru',
+        },
+        {
+            title: 'Заголовок (туркм.)',
+            dataIndex: 'title_tm',
+            key: 'title_tm',
+        },
+        {
+            title: 'Содержание (рус.)',
+            dataIndex: 'content_ru',
+            key: 'content_ru',
+        },
+        {
+            title: 'Содержание (туркм.)',
+            dataIndex: 'content_tm',
+            key: 'content_tm',
+        },
+        {
+            title: 'Автор',
+            dataIndex: 'author',
+            key: 'author',
+        },
+        {
+            title: 'Номер телефона',
+            dataIndex: 'phone_number',
+            key: 'phone_number',
         },
         {
             title: 'Delete',
@@ -91,7 +128,7 @@ function Banners(props) {
             key: 'active',
             width: '120px',
             render: (_, record) => (
-                <div className='update-icon' onClick={() => showUpdateModal(record)}>
+                <div className='update-icon' onClick={() => showAddModal(record)}>
                     {/* <TiDelete /> */}
                     Изменить
                 </div>
@@ -107,7 +144,7 @@ function Banners(props) {
     const handleOk = async () => {
         try {
             setConfirmLoading(true);
-            const res = await axiosInstance.delete(`banner/delete/${selectedItem._id}`);
+            const res = await axiosInstance.delete(`news/delete/${selectedItem._id}`);
             const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
             setDataSource(newDataSource);
             message.success('Успешно удалено!')
@@ -124,60 +161,58 @@ function Banners(props) {
         setOpen(false);
     };
 
-    // ------------------------------ Change Active-------------------------------//
-    const showActiveModal = (item) => {
-        setSelectedItem(item);
-        setOpenActive(true);
-    };
-
-    const handleActiveOk = async () => {
-        try {
-            setConfirmLoading(true);
-            const res = await axiosInstance.patch(`banner/update/${selectedItem._id}/`, { active: !selectedItem.active });
-            setDataSource(previousState => {
-                let a = previousState;
-                const index = a.findIndex(element => element._id === selectedItem._id);
-                a[index].active = !a[index].active
-                return a
-            });
-            message.success('Успешно изменено')
-            setOpenActive(false);
-            setConfirmLoading(false);
-        } catch (err) {
-            setConfirmLoading(false)
-            message.error('Произошла ошибка. Пожалуйста, попробуйте еще раз!')
-            console.log(err)
-        }
-    };
-
-    const handleActiveCancel = () => {
-        setOpenActive(false);
-    };
-
     //-----------------------------------------Add Modal-------------------------------------------------//
     const showAddModal = (item) => {
+        if (item._id) {
+            setNewItem(item);
+            setSelectedItem(item);
+            const filtered = options.filter(element => element.value == item.section);
+            setSelected(filtered[0]);
+        };
         setAddOpen(true);
     };
 
     const handleAddOk = async () => {
         try {
             setConfirmLoading(true);
+            delete newItem.section;
+            delete newItem.image;
             const formData = new FormData();
-            formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
-            formData.append("active", newItemActive);
-            const res = await axiosInstance.post(`banner/create`, formData);
-            let a = {
-                key: fileList[0].originFileObj.uid,
-                id: res.data.data._id,
-                image: URL.createObjectURL(fileList[0].originFileObj),
-                active: newItemActive,
-                url: res.data.data.url
+            const keys = Object.keys(newItem);
+            const values = Object.values(newItem);
+            keys.forEach((key, index) => {
+                formData.append(key, values[index]);
+            })
+            fileList[0] && formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
+            formData.append("section", selected._id);
+            if (selectedItem?._id) {
+                const res = await axiosInstance.patch(`news/update/${selectedItem._id}`, formData);
+                setDataSource(previousState => {
+                    const a = previousState;
+                    const index = a.findIndex(item => item._id == newItem._id);
+                    keys.forEach((item, i) => {
+                        a[index][item] = values[i];
+                    });
+                    a[index].section = selected.label;
+                    if (fileList[0]) a[index].image = URL.createObjectURL(fileList[0].originFileObj);
+                    return a;
+                })
             }
-            setDataSource([...dataSource, a]);
+            if (!selectedItem) {
+                const res = await axiosInstance.post(`news/create`, formData);
+                res.data.data._id = res.data.data._id;
+                res.data.data.key = fileList[0].originFileObj.uid;
+                res.data.data.image = URL.createObjectURL(fileList[0].originFileObj);
+                res.data.data.section = res.data.data.section == null ? '-' : res.data.data.section.name_ru;
+                res.data.data.phone_number = res.data.data.phone_number == null ? '-' : res.data.data.phone_number;
+                res.data.data.author = res.data.data.author == null ? '-' : res.data.data.author;
+                setDataSource([...dataSource, res.data.data]);
+            }
             message.success('Успешно добавлено');
             setAddOpen(false);
+            setSelected(null);
             setFileList([]);
-            setNewItemActive(true);
+            setNewItem(null);
             setConfirmLoading(false);
         } catch (err) {
             setConfirmLoading(false)
@@ -188,6 +223,8 @@ function Banners(props) {
 
     const handleAddCancel = () => {
         setFileList([]);
+        setSelected(null);
+        setNewItem(null);
         setAddOpen(false);
     };
 
@@ -210,56 +247,6 @@ function Banners(props) {
         }
     };
 
-    //--------------------------------------Update Modal ------------------------------------//
-    const showUpdateModal = (item) => {
-        setSelectedItem(item);
-        setOpenUpdate(true);
-    };
-
-    const handleUpdateOk = async () => {
-        try {
-            await axiosInstance.patch(`banner/update/${selectedItem._id}/`)
-            setDataSource(previousState => {
-                const a = previousState;
-                const index = a.findIndex(element => element._id === selectedItem._id);
-                a[index].image = URL.createObjectURL(fileList[0].originFileObj);
-                return a;
-            })
-            setFileList([]);
-            message.success('Успешно изменено!');
-            setOpenUpdate(false);
-        } catch (err) {
-            message.error('Произошла ошибка. Пожалуйста, попробуйте еще раз!');
-            setOpenUpdate(false);
-            console.log(err)
-        }
-    }
-
-    const handleCustomRequest = async (options) => {
-        const { onSuccess, onError, file, onProgress } = options;
-        const config = {
-            onUploadProgress: event => {
-                const percent = Math.floor((event.loaded / event.total) * 100);
-                setProgress(percent);
-                if (percent === 100) {
-                    setTimeout(() => setProgress(0), 1000);
-                }
-                onProgress({ percent: (event.loaded / event.total) * 100 });
-            }
-        };
-        try {
-            onSuccess("Ok");
-        } catch (err) {
-            onError({ err });
-        }
-    };
-
-
-    const handleUpdateCancel = () => {
-        setFileList([])
-        setOpenUpdate(false);
-    };
-
     const uploadButton = (
         <div>
             <PlusOutlined />
@@ -273,6 +260,15 @@ function Banners(props) {
         </div>
     );
 
+    const handleAddChange = (e) => {
+        setNewItem({ ...newItem, [e.target.name]: [e.target.value] });
+    }
+
+    const handleSelect = (e) => {
+        const filtered = options.filter(item => item.value == e);
+        setSelected(filtered[0]);
+    }
+
     return (
         <>
             <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handlePreviewCancel} centered zIndex={'1001'}>
@@ -285,7 +281,7 @@ function Banners(props) {
                 />
             </Modal>
             <Modal
-                title="Выберите баннер и активность для добавления"
+                title="Дополните детали"
                 open={addOpen}
                 onOk={handleAddOk}
                 width={'600px'}
@@ -294,19 +290,38 @@ function Banners(props) {
                 cancelText={'Отмена'}
                 okText={'Да'}
                 okType={'primary'}
-                style={{ top: '200px' }}
+                style={{ top: '50px' }}
             >
                 <div className='banner-add-container'>
                     <div className='add-left'>
                         <div className='add-picture'>
-                            Выберите баннер
+                            Изображение
                         </div>
                         <div className='add-column'>
-                            Активный
+                            Раздел
+                        </div>
+                        <div className='add-column'>
+                            Заголовок (рус.)
+                        </div>
+                        <div className='add-column'>
+                            Заголовок (туркм.)
+                        </div>
+                        <div className='add-column'>
+                            Содержание (рус.)
+                        </div>
+                        <div className='add-column'>
+                            Содержание (туркм.)
+                        </div>
+                        <div className='add-column'>
+                            Автор
+                        </div>
+                        <div className='add-column'>
+                            Номер телефона
                         </div>
                     </div>
                     <div className='add-right'>
                         <div className='add-picture'>
+                            {newItem?._id && <img className='brand-image' src={newItem.image} alt={newItem?.name_ru} />}
                             <Upload
                                 customRequest={handleAddCustomRequest}
                                 listType="picture-card"
@@ -318,7 +333,35 @@ function Banners(props) {
                             </Upload>
                         </div>
                         <div className='add-column'>
-                            <Checkbox checked={newItemActive} onChange={(e) => setNewItemActive(e.target.checked)} />
+                            <Select
+                                value={selected}
+                                showSearch
+                                allowClear
+                                style={{
+                                    width: '100%',
+                                }}
+                                placeholder="Выберите категорию"
+                                onChange={(e) => handleSelect(e)}
+                                options={options}
+                            />
+                        </div>
+                        <div className='add-column'>
+                            <Input name='title_ru' placeholder='Заголовок (рус.)' value={newItem?.title_ru} onChange={handleAddChange} />
+                        </div>
+                        <div className='add-column'>
+                            <Input name='title_tm' placeholder='Заголовок (туркм.)' value={newItem?.title_tm} onChange={handleAddChange} />
+                        </div>
+                        <div className='add-column-textarea'>
+                            <Input.TextArea name='content_ru' placeholder='Содержание (рус.)' value={newItem?.content_ru} onChange={handleAddChange} />
+                        </div>
+                        <div className='add-column-textarea'>
+                            <Input.TextArea name='content_tm' placeholder='Содержание (туркм.)' value={newItem?.content_tm} onChange={handleAddChange} />
+                        </div>
+                        <div className='add-column'>
+                            <Input name='author' placeholder='Автор' value={newItem?.author} onChange={handleAddChange} />
+                        </div>
+                        <div className='add-column'>
+                            <Input name='phone_number' placeholder='Номер телефона' value={newItem?.phone_number} onChange={handleAddChange} />
                         </div>
                     </div>
                 </div>
@@ -338,55 +381,9 @@ function Banners(props) {
                     top: '200px'
                 }}
             />
-            <Modal
-                title="Вы уверены, что хотите изменить активност?"
-                open={openActive}
-                onOk={handleActiveOk}
-                confirmLoading={confirmLoading}
-                onCancel={handleActiveCancel}
-                cancelText={'Отмена'}
-                okText={'Да'}
-                okType={'primary'}
-                style={{
-                    top: '200px'
-                }}
-            />
-            <Modal
-                title="Изменить"
-                width='750px'
-                open={openUpdate}
-                onOk={handleUpdateOk}
-                confirmLoading={confirmUpdateLoading}
-                onCancel={handleUpdateCancel}
-                cancelText={'Отмена'}
-                okText={'Да'}
-                okType={'primary'}
-                style={{
-                    top: '200px'
-                }}
-            >
-                <div className='banner-update-container'>
-                    <div className='banner-update-left'>
-                        <p className='banner-image-content'>Image</p>
-                        {/* <p>New Image</p> */}
-                    </div>
-                    <div className='banner-update-right'>
-                        <img className='banner-image' src={selectedItem?.image} />
-                        <Upload
-                            customRequest={handleCustomRequest}
-                            listType="picture-card"
-                            fileList={fileList}
-                            onPreview={handlePreview}
-                            onChange={handleChange}
-                        >
-                            {fileList.length == 0 && uploadButton}
-                        </Upload>
-                    </div>
-                </div>
-            </Modal>
             <div className='banners-container page'>
                 <div className='banners-header-container'>
-                    <h2>Баннеры</h2>
+                    <h2>Новости</h2>
                     <div className='add-button' onClick={showAddModal}>Добавлять</div>
                 </div>
                 <TableComponent dataSource={dataSource} columns={columns} pagination={false} active={selectedItem?._id} />
