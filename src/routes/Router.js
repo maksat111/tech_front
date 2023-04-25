@@ -21,10 +21,10 @@ function Router() {
         {
             element: <Suspense fallback={<PageLoading />}><SideBarNavbar /></Suspense>,
             children: [
-                {
-                    element: <Suspense fallback={<Loading />}><Banners /></Suspense>,
-                    path: '/banners'
-                },
+                // {
+                //     element: <Suspense fallback={<Loading />}><Banners /></Suspense>,
+                //     path: '/banners'
+                // },
                 {
                     element: <Suspense fallback={<Loading />}><Sections /></Suspense>,
                     path: '/sections'
