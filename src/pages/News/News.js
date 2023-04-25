@@ -318,10 +318,10 @@ function Banners(props) {
                         <div className='add-column'>
                             Заголовок (туркм.)
                         </div>
-                        <div className='add-column'>
+                        <div className='add-column-textarea'>
                             Содержание (рус.)
                         </div>
-                        <div className='add-column'>
+                        <div className='add-column-textarea'>
                             Содержание (туркм.)
                         </div>
                         <div className='add-column'>
