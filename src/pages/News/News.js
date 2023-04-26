@@ -144,7 +144,7 @@ function Banners(props) {
     const handleOk = async () => {
         try {
             setConfirmLoading(true);
-            const res = await axiosInstance.delete(`news/delete/${selectedItem._id}`);
+            const res = await axiosInstance.post(`news/delete/${selectedItem._id}`);
             const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
             setDataSource(newDataSource);
             message.success('Успешно удалено!')

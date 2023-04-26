@@ -29,7 +29,7 @@ function AboutUs() {
     const handleOk = async () => {
         try {
             setConfirmLoading(true);
-            await axiosInstance.delete(`section/delete/${selectedItem._id}/`);
+            await axiosInstance.post(`section/delete/${selectedItem._id}/`);
             const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
             setDataSource(newDataSource);
             message.success('Успешно удалено!');
@@ -175,10 +175,10 @@ function AboutUs() {
                     </div>
                     <div className='add-right'>
                         <div className='add-column'>
-                            <Input name='name_ru' placeholder='Название (рус.)' value={newItem?.name_ru} onChange={handleAddChange} />
+                            <Input name='content_ru' placeholder='Название (рус.)' value={newItem?.name_ru} onChange={handleAddChange} />
                         </div>
                         <div className='add-column'>
-                            <Input name='name_tm' placeholder='Название (туркм.)' value={newItem?.name_tm} onChange={handleAddChange} />
+                            <Input name='content_tm' placeholder='Название (туркм.)' value={newItem?.name_tm} onChange={handleAddChange} />
                         </div>
                     </div>
                 </div>

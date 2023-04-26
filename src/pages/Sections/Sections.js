@@ -29,7 +29,7 @@ function Sections() {
     const handleOk = async () => {
         try {
             setConfirmLoading(true);
-            await axiosInstance.delete(`section/delete/${selectedItem._id}/`);
+            await axiosInstance.post(`section/delete/${selectedItem._id}/`);
             const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
             setDataSource(newDataSource);
             message.success('Успешно удалено!');

@@ -10,7 +10,8 @@ const axiosInstance = axios.create({
     headers: {
         'Content-Type': 'multipart/form-data',
         'Accept': "application/json",
-        'X-REST-Method': 'DELETE',
+        // 'X-REST-Method': 'DELETE',
+        // 'Cache-Control': 'no-cache',
         "x-access-token": `${token}`
     }
 });

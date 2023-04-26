@@ -29,7 +29,7 @@ function Users() {
     const handleOk = async () => {
         try {
             setConfirmLoading(true);
-            await axiosInstance.delete(`user/delete/${selectedItem._id}/`);
+            await axiosInstance.post(`user/delete/${selectedItem._id}/`);
             const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
             setDataSource(newDataSource);
             message.success('Успешно удалено!');
