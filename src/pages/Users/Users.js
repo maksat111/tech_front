@@ -127,7 +127,7 @@ function Users() {
                     const a = previousState;
                     a[index].name = newItem.name;
                     a[index].surname = newItem.surname;
-                    a[index].username = newItem.usersurname;
+                    a[index].username = newItem.username;
                     return a;
                 })
             } else {
