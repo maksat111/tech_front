@@ -2,8 +2,7 @@ import axios from 'axios';
 import { getToken } from '../utils/getToken';
 
 const token = getToken();
-// const BASE_URL = 'http://216.250.10.118/api/admin/';
-const BASE_URL = 'http://127.0.0.1:5000/api/admin/';
+const BASE_URL = 'http://216.250.10.118/api/admin/';
 
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -11,8 +10,6 @@ const axiosInstance = axios.create({
     headers: {
         'Content-Type': 'multipart/form-data',
         'Accept': "application/json",
-        // 'X-REST-Method': 'DELETE',
-        // 'Cache-Control': 'no-cache',
         "x-access-token": `${token}`
     }
 });

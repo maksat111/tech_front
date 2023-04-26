@@ -53,7 +53,6 @@ function Sections() {
             res.data.data.forEach(element => {
                 element.key = element._id;
                 element.createdAt = element.created_at ? element.created_at : element.createdAt;
-                // element.created_at = date.format(element.created_at, 'YYYY-MM-DD')
             });
             setDataSource(res.data.data);
         }).catch(err => console.log(err));
@@ -133,7 +132,7 @@ function Sections() {
                 const res = await axiosInstance.post('section/create', formData);
                 newItem._id = res.data.data?._id;
                 newItem.key = res.data.data?._id;
-                newItem.created_at = res.data.data?.created_at;
+                newItem.createdAt = res.data.data?.createdAt;
                 setDataSource([...dataSource, newItem])
             }
             setConfirmLoading(false);

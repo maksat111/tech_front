@@ -138,7 +138,7 @@ function Users() {
                 const res = await axiosInstance.post('user/create', formData);
                 newItem._id = res.data.data?._id;
                 newItem.key = res.data.data?._id;
-                newItem.created_at = res.data.data?.created_at;
+                newItem.createdAt = res.data.data?.createdAt;
                 setDataSource([...dataSource, newItem])
             }
             setConfirmLoading(false);
