@@ -51,7 +51,8 @@ function AboutUs() {
     useEffect(() => {
         axiosInstance.get('about').then(res => {
             res.data.data.forEach(element => {
-                element.key = element._id
+                element.key = element._id;
+                element.createdAt = element.created_at ? element.created_at : element.createdAt;
             });
             setDataSource(res.data.data);
         }).catch(err => console.log(err));
@@ -70,8 +71,11 @@ function AboutUs() {
         },
         {
             title: 'Дата создания',
-            dataIndex: 'created_at',
-            key: 'created_at',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: (_, record) => (
+                <p>{date.format(new Date(record.createdAt), 'YYYY-MM-DD HH:mm:ss')}</p>
+            ),
         },
         {
             title: 'Удалить',
@@ -127,7 +131,7 @@ function AboutUs() {
             } else {
                 const res = await axiosInstance.post('about/create', formData);
                 newItem._id = res.data.data?._id;
-                newItem.created_at = res.data.data?.created_at;
+                newItem.createdAt = res.data.data?.createdAt;
                 setDataSource([...dataSource, newItem])
             }
             setConfirmLoading(false);

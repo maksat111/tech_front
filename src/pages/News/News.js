@@ -401,7 +401,7 @@ function Banners(props) {
                 <TableComponent
                     dataSource={dataSource}
                     columns={columns}
-                    pagination={{ onChange: onPaginationChange, total: total, pageSize: 20, position: ['bottomRight'] }}
+                    pagination={{ onChange: onPaginationChange, total: total, pageSize: 10, position: ['bottomRight'] }}
                     active={selectedItem?._id} />
             </div>
         </>

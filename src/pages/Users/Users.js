@@ -51,7 +51,8 @@ function Users() {
     useEffect(() => {
         axiosInstance.get('user/list').then(res => {
             res.data.data.forEach(element => {
-                element.key = element._id
+                element.key = element._id;
+                element.createdAt = element.created_at ? element.created_at : element.createdAt;
             });
             setDataSource(res.data.data);
         }).catch(err => console.log(err));
@@ -76,7 +77,10 @@ function Users() {
         {
             title: 'Дата создания',
             dataIndex: 'created_at',
-            key: 'created_at',
+            key: 'createdAt',
+            render: (_, record) => (
+                <p>{date.format(new Date(record.createdAt), 'YYYY-MM-DD HH:mm:ss')}</p>
+            ),
         },
         {
             title: 'Удалить',
