@@ -19,17 +19,11 @@ function SideBar() {
     const navigate = useNavigate();
     const iconStyle = toggled ? { fontSize: '22px', marginBottom: '-8px' } : { fontSize: '20px' };
     const items = [
-        // {
-        //     group: 'БИБЛИОНТЕКА',
-        //     icon: <TfiDashboard style={iconStyle} />,
-        //     title: 'Dashboard',
-        //     href: '/dashboard'
-        // },
-        // {
-        //     icon: <BsImages style={iconStyle} />,
-        //     title: 'Баннеры',
-        //     href: '/banners'
-        // },
+        {
+            icon: <BsImages style={iconStyle} />,
+            title: 'Баннеры',
+            href: '/banners'
+        },
         {
             icon: <TbMessageChatbot style={iconStyle} />,
             title: 'Новости',
