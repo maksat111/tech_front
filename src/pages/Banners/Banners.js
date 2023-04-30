@@ -98,7 +98,7 @@ function Banners(props) {
     const handleOk = async () => {
         try {
             setConfirmLoading(true);
-            const res = await axiosInstance.delete(`banner/delete/${selectedItem._id}`);
+            const res = await axiosInstance.post(`banner/delete/${selectedItem._id}`);
             const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
             setDataSource(newDataSource);
             message.success('Успешно удалено!')
@@ -148,6 +148,7 @@ function Banners(props) {
 
     const handleAddCancel = () => {
         setFileList([]);
+        setBannerUrl('');
         setAddOpen(false);
     };
 
@@ -182,7 +183,7 @@ function Banners(props) {
         fileList[0] && formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
         formData.append("url", bannerUrl);
         try {
-            await axiosInstance.patch(`banner/update/${selectedItem._id}/`, formData)
+            await axiosInstance.patch(`banner/update/${selectedItem._id}`, formData)
             setDataSource(previousState => {
                 const a = previousState;
                 const index = a.findIndex(element => element._id === selectedItem._id);
@@ -191,6 +192,7 @@ function Banners(props) {
                 return a;
             })
             setFileList([]);
+            setBannerUrl('');
             message.success('Успешно изменено!');
             setOpenUpdate(false);
         } catch (err) {
@@ -221,7 +223,8 @@ function Banners(props) {
 
 
     const handleUpdateCancel = () => {
-        setFileList([])
+        setFileList([]);
+        setBannerUrl('');
         setOpenUpdate(false);
     };
 
@@ -321,21 +324,30 @@ function Banners(props) {
                     top: '200px'
                 }}
             >
-                <div className='banner-update-container'>
-                    <div className='banner-update-left'>
-                        <p className='banner-image-content'>Image</p>
+                <div className='banner-add-container'>
+                    <div className='add-left'>
+                        <div className='add-picture'>
+                            Выберите баннер
+                        </div>
+                        <div className='add-column'>
+                            Url
+                        </div>
                     </div>
-                    <div className='banner-update-right'>
-                        <img className='banner-image' src={selectedItem?.image} />
-                        <Upload
-                            customRequest={handleCustomRequest}
-                            listType="picture-card"
-                            fileList={fileList}
-                            onPreview={handlePreview}
-                            onChange={handleChange}
-                        >
-                            {fileList.length == 0 && uploadButton}
-                        </Upload>
+                    <div className='add-right'>
+                        <div className='add-picture'>
+                            <Upload
+                                customRequest={handleAddCustomRequest}
+                                listType="picture-card"
+                                fileList={fileList}
+                                onPreview={handlePreview}
+                                onChange={handleChange}
+                            >
+                                {fileList.length == 0 && uploadButton}
+                            </Upload>
+                        </div>
+                        <div className='add-column'>
+                            <Input placeholder='Banner url' value={bannerUrl} onChange={urlChange} />
+                        </div>
                     </div>
                 </div>
             </Modal>
