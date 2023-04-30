@@ -46,7 +46,7 @@ function Banners(props) {
             setTotal(res.data.count)
             res?.data.data.forEach(item => {
                 item.key = item._id;
-                item.image = 'http://216.250.10.118:5000/' + item.image;
+                item.image = 'http://127.0.0.1:5000/' + item.image;
                 item.section = item.section == null ? '-' : item.section.name_ru;
                 item.phone_number = item.phone_number == null ? '-' : item.phone_number;
                 item.author = item.author == null ? '-' : item.author;
@@ -72,7 +72,7 @@ function Banners(props) {
             dataIndex: 'image',
             key: 'image',
             render: (_, record) => (
-                <img className='banner-image' src={record.image} alt='Image' />
+                <img className='news-image' src={record.image} alt='Image' />
             ),
         },
         {

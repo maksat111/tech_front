@@ -1,15 +1,7 @@
 import { React, useState } from 'react';
-import { TfiDashboard } from 'react-icons/tfi';
-import { BsImages, BsInboxes } from 'react-icons/bs';
-import { AiOutlineTag, AiOutlineShoppingCart, AiOutlineExclamationCircle } from 'react-icons/ai';
-import { TbTruckDelivery, TbSubtask, TbMessageChatbot, TbUsers, TbDiscount2 } from 'react-icons/tb';
-import { RiCoupon2Line, RiListSettingsLine } from 'react-icons/ri';
-import { FaCity } from 'react-icons/fa';
-import { MdMapsHomeWork } from 'react-icons/md';
-import { BiCategory } from 'react-icons/bi';
-import { IoPricetagsOutline } from 'react-icons/io5';
-import { FiSettings } from 'react-icons/fi';
-import { VscSettings } from 'react-icons/vsc';
+import { BsImages } from 'react-icons/bs';
+import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import { TbSubtask, TbMessageChatbot, TbUsers } from 'react-icons/tb';
 import { HiOutlineChevronDoubleLeft, HiOutlineChevronDoubleRight } from 'react-icons/hi';
 import './SideBar.css';
 import { useNavigate } from 'react-router-dom';
@@ -20,14 +12,14 @@ function SideBar() {
     const iconStyle = toggled ? { fontSize: '22px', marginBottom: '-8px' } : { fontSize: '20px' };
     const items = [
         {
-            icon: <BsImages style={iconStyle} />,
-            title: 'Баннеры',
-            href: '/banners'
-        },
-        {
             icon: <TbMessageChatbot style={iconStyle} />,
             title: 'Новости',
             href: '/news'
+        },
+        {
+            icon: <BsImages style={iconStyle} />,
+            title: 'Баннеры',
+            href: '/banners'
         },
         {
             icon: <TbSubtask style={iconStyle} />,
