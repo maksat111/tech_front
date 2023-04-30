@@ -44,7 +44,7 @@ function Banners(props) {
         axiosInstance.get('banner/list').then(res => {
             res?.data.data.forEach(item => {
                 item.key = item._id;
-                item.image = 'http://127.0.0.1:5000/' + item.image;
+                item.image = 'http://216.250.10.118:5000/' + item.image;
             });
             setDataSource(res.data.data);
         }).catch(err => console.log(err));
