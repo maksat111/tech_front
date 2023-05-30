@@ -2,13 +2,13 @@ import { React, useEffect, useState } from 'react';
 import { DatePicker, Modal, message } from 'antd';
 import dayjs from 'dayjs';
 import date from 'date-and-time';
-import { axiosInstance } from '../../config/axios';
-import TableComponent from '../../components/TableComponent';
+import { axiosInstance } from '../../../config/axios';
+import TableComponent from '../../../components/TableComponent';
 import Input from 'antd/es/input/Input';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
-function AboutUs() {
+function Sections() {
     const dateFormat = 'YYYY-MM-DD';
     const [dataSource, setDataSource] = useState([]);
     const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ function AboutUs() {
     const handleOk = async () => {
         try {
             setConfirmLoading(true);
-            await axiosInstance.post(`about/delete/${selectedItem._id}`);
+            await axiosInstance.post(`section/delete/${selectedItem._id}`);
             const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
             setDataSource(newDataSource);
             message.success('Успешно удалено!');
@@ -49,7 +49,7 @@ function AboutUs() {
     };
 
     useEffect(() => {
-        axiosInstance.get('about').then(res => {
+        axiosInstance.get('section/list').then(res => {
             res.data.data.forEach(element => {
                 element.key = element._id;
                 element.createdAt = element.created_at ? element.created_at : element.createdAt;
@@ -61,17 +61,17 @@ function AboutUs() {
     const columns = [
         {
             title: 'Название (рус.)',
-            dataIndex: 'content_ru',
-            key: 'content_ru',
+            dataIndex: 'name_ru',
+            key: 'name_ru',
         },
         {
             title: 'Название (туркм.)',
-            dataIndex: 'content_tm',
-            key: 'content_tm',
+            dataIndex: 'name_tm',
+            key: 'name_tm',
         },
         {
             title: 'Дата создания',
-            dataIndex: 'createdAt',
+            dataIndex: 'created_at',
             key: 'createdAt',
             render: (_, record) => (
                 <p>{date.format(new Date(record.createdAt), 'YYYY-MM-DD HH:mm:ss')}</p>
@@ -120,17 +120,18 @@ function AboutUs() {
         })
         try {
             if (newItem._id) {
-                const res = await axiosInstance.patch(`about/update/${newItem._id}`, formData);
+                const res = await axiosInstance.patch(`section/update/${newItem._id}`, formData);
                 const index = dataSource.findIndex(item => item._id == newItem._id);
                 setDataSource(previousState => {
                     const a = previousState;
-                    a[index].content_ru = newItem.content_ru;
-                    a[index].content_tm = newItem.content_tm;
+                    a[index].name_ru = newItem.name_ru;
+                    a[index].name_en = newItem.name_en;
                     return a;
                 })
             } else {
-                const res = await axiosInstance.post('about/create', formData);
+                const res = await axiosInstance.post('section/create', formData);
                 newItem._id = res.data.data?._id;
+                newItem.key = res.data.data?._id;
                 newItem.createdAt = res.data.data?.createdAt;
                 setDataSource([...dataSource, newItem])
             }
@@ -179,10 +180,10 @@ function AboutUs() {
                     </div>
                     <div className='add-right'>
                         <div className='add-column'>
-                            <Input name='content_ru' placeholder='Название (рус.)' value={newItem?.name_ru} onChange={handleAddChange} />
+                            <Input name='name_ru' placeholder='Название (рус.)' value={newItem?.name_ru} onChange={handleAddChange} />
                         </div>
                         <div className='add-column'>
-                            <Input name='content_tm' placeholder='Название (туркм.)' value={newItem?.name_tm} onChange={handleAddChange} />
+                            <Input name='name_tm' placeholder='Название (туркм.)' value={newItem?.name_tm} onChange={handleAddChange} />
                         </div>
                     </div>
                 </div>
@@ -203,7 +204,7 @@ function AboutUs() {
             />
             <div className='page'>
                 <div className='page-header-content'>
-                    <h2>О нас</h2>
+                    <h2>Разделы</h2>
                     <div className='add-button' onClick={showAddModal}>Добавить</div>
                 </div>
                 <TableComponent dataSource={dataSource} columns={columns} pagination={false} active={selectedItem?.id} />
@@ -212,4 +213,4 @@ function AboutUs() {
     );
 }
 
-export default AboutUs;
+export default Sections;

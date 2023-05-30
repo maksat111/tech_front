@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineLoading, AiOutlineUser, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineLock } from 'react-icons/ai';
 import './Login.css'
-import { loginPost } from '../../config/axios';
+import { loginPost } from '../../../config/axios';
 import { message } from 'antd';
-import Logo from '../../images/logo.png';
+import Logo from '../../../images/logo.png';
 
 const Login = () => {
     const navigate = useNavigate();

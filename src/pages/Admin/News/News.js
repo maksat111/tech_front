@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { message, Input, Select } from 'antd';
-import TableComponent from '../../components/TableComponent';
-import { axiosInstance } from '../../config/axios';
+import TableComponent from '../../../components/TableComponent';
+import { axiosInstance } from '../../../config/axios';
 import { PlusOutlined } from '@ant-design/icons';
 import './News.css';
 import { Modal, Upload } from 'antd';
