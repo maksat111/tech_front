@@ -14,27 +14,27 @@ function SideBar() {
         {
             icon: <TbMessageChatbot style={iconStyle} />,
             title: 'Новости',
-            href: '/news'
+            href: '/admin/news'
         },
         {
             icon: <BsImages style={iconStyle} />,
             title: 'Баннеры',
-            href: '/banners'
+            href: '/admin/banners'
         },
         {
             icon: <TbSubtask style={iconStyle} />,
             title: 'Разделы',
-            href: '/sections'
+            href: 'admin/sections'
         },
         {
             icon: <TbUsers style={iconStyle} />,
             title: 'Пользователи',
-            href: '/users'
+            href: 'admin/users'
         },
         {
             icon: <AiOutlineExclamationCircle style={iconStyle} />,
             title: 'О нас',
-            href: '/aboutUs'
+            href: 'admin/aboutUs'
         },
     ]
 

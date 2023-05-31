@@ -3,7 +3,7 @@ import { DatePicker, Modal, message } from 'antd';
 import dayjs from 'dayjs';
 import date from 'date-and-time';
 import { axiosInstance } from '../../../config/axios';
-import TableComponent from '../../../components/TableComponent';
+import TableComponent from '../../../components/Admin/TableComponent';
 import Input from 'antd/es/input/Input';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);

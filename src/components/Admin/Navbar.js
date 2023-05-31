@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'antd';
-import logo from '../images/logo.png';
+import logo from '../../images/logo.png';
 import './Navbar.css';
 import { AiOutlineUser } from 'react-icons/ai';
 import { FiLogOut } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { getToken } from '../utils/getToken';
+import { getToken } from '../../utils/getToken';
 
 function Navbar() {
     const [open, setOpen] = useState(false);

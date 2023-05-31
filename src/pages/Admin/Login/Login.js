@@ -20,7 +20,7 @@ const Login = () => {
             localStorage.setItem('ertir-admin', JSON.stringify(res.data.data));
             message.success('Successfully!');
             setLoading(false);
-            window.location.pathname = '/news';
+            window.location.pathname = '/admin/banners';
         } catch (err) {
             err.response?.data?.msg ? message.error(err.response.data.msg) : message.error('ошибка, попробуйте еще раз, пожалуйста');
             setLoading(false);
