@@ -1,6 +1,9 @@
 import { React, useState } from 'react';
 import { BsImages } from 'react-icons/bs';
-import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import { BiCategory } from 'react-icons/bi';
+import { BsInboxes } from 'react-icons/bs';
+import { RiAdminLine } from 'react-icons/ri';
+import { AiOutlineExclamationCircle, AiOutlineTag } from 'react-icons/ai';
 import { TbSubtask, TbMessageChatbot, TbUsers } from 'react-icons/tb';
 import { HiOutlineChevronDoubleLeft, HiOutlineChevronDoubleRight } from 'react-icons/hi';
 import './SideBar.css';
@@ -12,29 +15,39 @@ function SideBar() {
     const iconStyle = toggled ? { fontSize: '22px', marginBottom: '-8px' } : { fontSize: '20px' };
     const items = [
         {
-            icon: <TbMessageChatbot style={iconStyle} />,
-            title: 'Новости',
-            href: '/admin/news'
-        },
-        {
             icon: <BsImages style={iconStyle} />,
             title: 'Баннеры',
             href: '/admin/banners'
         },
         {
+            icon: <BiCategory style={iconStyle} />,
+            title: 'Категории',
+            href: '/administrator/categories'
+        },
+        {
             icon: <TbSubtask style={iconStyle} />,
-            title: 'Разделы',
-            href: 'admin/sections'
+            title: 'Подкатегории',
+            href: '/administrator/subcategories'
+        },
+        {
+            icon: <AiOutlineTag style={iconStyle} />,
+            title: 'Бренды',
+            href: '/admin/brands'
         },
         {
             icon: <TbUsers style={iconStyle} />,
+            title: 'Клиенты',
+            href: '/administrator/clients'
+        },
+        {
+            icon: <RiAdminLine style={iconStyle} />,
             title: 'Пользователи',
             href: 'admin/users'
         },
         {
-            icon: <AiOutlineExclamationCircle style={iconStyle} />,
-            title: 'О нас',
-            href: 'admin/aboutUs'
+            icon: <BsInboxes style={iconStyle} />,
+            title: 'Товары',
+            href: '/administrator/products'
         },
     ]
 

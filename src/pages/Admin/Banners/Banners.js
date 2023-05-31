@@ -158,12 +158,10 @@ function Banners(props) {
     const showAddModal = (item) => {
         setAddOpen(true);
     };
-    console.log(fileList[0])
 
     const handleAddOk = async () => {
         try {
             setConfirmLoading(true);
-            console.log(fileList[0])
             const formData = new FormData();
             formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
             formData.append("is_active", newItemActive);

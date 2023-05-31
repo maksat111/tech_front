@@ -29,19 +29,19 @@ const Login = () => {
 
     return (
         <div className='login_page'>
-            <form className="login-container" onSubmit={handleSubmit}>
-                <img src={Logo} alt='logo' />
+            <form className="login-container" onSubmit={handleSubmit} autoComplete='off'>
+                {/* <img src={Logo} alt='logo' /> */}
                 <h2>Добро пожаловать!</h2>
                 <p>Введите свой пароль, чтобы использовать приложение!</p>
 
                 <div className='input-container'>
                     <AiOutlineUser className='icon' />
-                    <input style={{ width: "395px" }} placeholder="Имя пользователя" onChange={(e) => setUsername(e.target.value)} required />
+                    <input style={{ width: "395px" }} autoComplete='new-password' placeholder="Имя пользователя" onChange={(e) => setUsername(e.target.value)} required />
                 </div>
 
                 <div className='input-container'>
                     <AiOutlineLock className='icon' />
-                    <input type={type} placeholder="Пароль" onChange={(e) => setPassword(e.target.value)} required />
+                    <input type={type} placeholder="Пароль" autoComplete="new-password" onChange={(e) => setPassword(e.target.value)} required />
                     {type == 'password' ? <AiOutlineEye className='icon' style={!password ? { color: 'white' } : { color: "rgb(73, 73, 231)" }} onClick={() => setType("text")} />
                         : <AiOutlineEyeInvisible className='icon' onClick={() => setType("password")} />
                     }
