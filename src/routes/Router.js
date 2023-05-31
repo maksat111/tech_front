@@ -5,10 +5,12 @@ import PageLoading from '../components/PageLoading';
 
 const Login = lazy(() => import('../pages/Admin/Login/Login'));
 const Banners = lazy(() => import('../pages/Admin/Banners/Banners'));
-const Sections = lazy(() => import('../pages/Admin/Sections/Sections'));
-const News = lazy(() => import('../pages/Admin/News/News'));
+const Brands = lazy(() => import('../pages/Admin/Brands/Brands'));
+const Categories = lazy(() => import('../pages/Admin/Categories/Categories'));
+const Clients = lazy(() => import('../pages/Admin/Clients/Clients'));
+const Products = lazy(() => import('../pages/Admin/Products/Products'));
+const Subcategories = lazy(() => import('../pages/Admin/Subcategories/Subcategories'));
 const Users = lazy(() => import('../pages/Admin/Users/Users'));
-const AboutUs = lazy(() => import('../pages/Admin/AboutUs/AboutUs'));
 
 const SideBarNavbar = lazy(() => import('./SidebarNavbar'));
 
@@ -26,20 +28,28 @@ function Router() {
                     path: '/admin/banners'
                 },
                 {
-                    element: <Suspense fallback={<Loading />}><Sections /></Suspense>,
-                    path: '/admin/sections'
+                    element: <Suspense fallback={<Loading />}><Brands /></Suspense>,
+                    path: '/admin/brands'
                 },
                 {
-                    element: <Suspense fallback={<Loading />}><News /></Suspense>,
-                    path: '/admin/news'
+                    element: <Suspense fallback={<Loading />}><Categories /></Suspense>,
+                    path: '/admin/categories'
+                },
+                {
+                    element: <Suspense fallback={<Loading />}><Clients /></Suspense>,
+                    path: '/admin/clients'
+                },
+                {
+                    element: <Suspense fallback={<Loading />}><Products /></Suspense>,
+                    path: '/admin/products'
+                },
+                {
+                    element: <Suspense fallback={<Loading />}><Subcategories /></Suspense>,
+                    path: '/admin/subcategories'
                 },
                 {
                     element: <Suspense fallback={<Loading />}><Users /></Suspense>,
                     path: '/admin/users'
-                },
-                {
-                    element: <Suspense fallback={<Loading />}><AboutUs /></Suspense>,
-                    path: '/admin/aboutUs'
                 },
             ]
         },

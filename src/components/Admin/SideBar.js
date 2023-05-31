@@ -22,12 +22,12 @@ function SideBar() {
         {
             icon: <BiCategory style={iconStyle} />,
             title: 'Категории',
-            href: '/administrator/categories'
+            href: '/admin/categories'
         },
         {
             icon: <TbSubtask style={iconStyle} />,
             title: 'Подкатегории',
-            href: '/administrator/subcategories'
+            href: '/admin/subcategories'
         },
         {
             icon: <AiOutlineTag style={iconStyle} />,
@@ -37,17 +37,17 @@ function SideBar() {
         {
             icon: <TbUsers style={iconStyle} />,
             title: 'Клиенты',
-            href: '/administrator/clients'
+            href: '/admin/clients'
         },
         {
             icon: <RiAdminLine style={iconStyle} />,
             title: 'Пользователи',
-            href: 'admin/users'
+            href: '/admin/users'
         },
         {
             icon: <BsInboxes style={iconStyle} />,
             title: 'Товары',
-            href: '/administrator/products'
+            href: '/admin/products'
         },
     ]
 
