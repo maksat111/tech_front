@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import TableComponent from '../../../components/Admin/TableComponent';
 import { axiosInstance } from '../../../config/axios';
-import { Modal, message, Upload, Select, Input } from 'antd'
+import { Modal, message, Upload, Checkbox, Select } from 'antd'
 import { PlusOutlined } from '@ant-design/icons';
 import './Subcategories.css';
+import Input from 'antd/es/input/Input';
 
 const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -18,22 +19,45 @@ function Subcategories() {
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+    const [total, setTotal] = useState(null);
     const [progress, setProgress] = useState(0);
     const [fileList, setFileList] = useState([]);
     const [addOpen, setAddOpen] = useState(false);
     const [previewOpen, setPreviewOpen] = useState(false);
+    const [selectOptions, setSelectOptions] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
+    const [newItemCategory, setNewItemCategory] = useState([]);
     const [newItem, setNewItem] = useState(null);
     const [searchValue, setSearchValue] = useState('');
     const [ordering, setOrdering] = useState({})
 
     useEffect(() => {
         axiosInstance.get('admin/subcategory/list').then(async (res) => {
-            res.data.data?.forEach(element => {
-                element.key = element._id;
+            let a = [];
+            let b = [];
+            setTotal(res.data.count);
+            res.data?.data.forEach(element => {
+                a.push({
+                    _id: element._id,
+                    key: element._id,
+                    name_ru: element.name_ru,
+                    name_en: element.name_en,
+                    name_tm: element.name_tm,
+                    image: element.image,
+                    category: element.category.name_ru
+                })
             });
-            setDataSource(res?.data.data);
+            setDataSource(a);
+            const categories = await axiosInstance.get('admin/category/list');
+            categories.data.data?.forEach(item => {
+                b.push({
+                    label: item.name_ru,
+                    value: item.name_ru,
+                    _id: item._id
+                })
+            });
+            setSelectOptions(b);
         }).catch(err => console.log(err))
     }, [])
 
@@ -60,11 +84,18 @@ function Subcategories() {
             sortDirections: ['ascend', 'descend', 'ascend'],
         },
         {
+            title: 'Категория',
+            dataIndex: 'category',
+            key: 'category',
+            sorter: true,
+            sortDirections: ['ascend', 'descend', 'ascend'],
+        },
+        {
             title: 'Logo',
             dataIndex: 'image',
             key: 'image',
             render: (_, record) => (
-                <img className='brand-image' src={'http://127.0.0.1:5000/' + record.image} alt={record.name_ru} />
+                <img className='subcategory-image' src={'http://127.0.0.1:5000/' + record.image} alt={record.name_ru} />
             ),
         },
         {
@@ -100,15 +131,15 @@ function Subcategories() {
         try {
             setConfirmLoading(true);
             const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
-            await axiosInstance.delete(`admin/subcategory/delete/${selectedItem._id}`);
+            await axiosInstance.delete(`admin/subcategory/delete/${selectedItem._id}/`);
             setDataSource(newDataSource);
-            message.success('Успешно удалено!');
+            message.success('Успешно удалено!')
             setOpen(false);
             setConfirmLoading(false);
         } catch (err) {
-            setConfirmLoading(false);
-            message.error('Произошла ошибка. Пожалуйста, попробуйте еще раз!');
-            console.log(err);
+            setConfirmLoading(false)
+            message.error('Произошла ошибка. Пожалуйста, попробуйте еще раз!')
+            console.log(err)
         }
     };
 
@@ -120,42 +151,58 @@ function Subcategories() {
     const showAddModal = (item) => {
         if (item._id) {
             setSelectedItem(item);
+            const filtered = selectOptions.filter(category => category.label == item.category);
+            setNewItemCategory({ _id: filtered[0]?._id, label: item.category, value: item.category })
             setNewItem(item);
         }
         setAddOpen(true);
     };
 
     const handleAddOk = async () => {
-        setConfirmLoading(true);
-        const formData = new FormData();
-        formData.append('name_ru', newItem.name_ru);
-        formData.append('name_en', newItem.name_en);
-        formData.append('name_tm', newItem.name_tm);
-        if (fileList.length !== 0) {
-            newItem.image = URL.createObjectURL(fileList[0]?.originFileObj);
-            formData.append("image", fileList[0]?.originFileObj, fileList[0]?.originFileObj.name);
-        }
         try {
             if (newItem._id) {
+                const formData = new FormData();
+                fileList[0] && formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
+                formData.append("name_ru", newItem.name_ru);
+                formData.append("name_en", newItem.name_en);
+                formData.append("name_tm", newItem.name_tm);
+                formData.append('category', newItemCategory._id);
                 const res = await axiosInstance.patch(`admin/subcategory/update/${newItem._id}`, formData);
                 const index = dataSource.findIndex(item => item._id == newItem._id);
                 setDataSource(previousState => {
                     const a = previousState;
                     a[index].name_ru = newItem.name_ru;
                     a[index].name_en = newItem.name_en;
-                    a[index].name_tk = newItem.name_tk;
+                    a[index].name_tm = newItem.name_tm;
                     a[index].image = res.data.data.image;
+                    a[index].category = newItemCategory.value;
                     return a;
                 })
             } else {
-                const res = await axiosInstance.post('admin/subcategory/create', formData);
-                newItem._id = res.data.data._id;
-                newItem.key = res.data.data._id;
-                newItem.image = res.data.data.image;
-                setDataSource([...dataSource, newItem]);
+                setConfirmLoading(true);
+
+                const formData = new FormData();
+                formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
+                formData.append("name_ru", newItem.name_ru);
+                formData.append("name_en", newItem.name_en);
+                formData.append("name_tm", newItem.name_tm);
+                formData.append('category', newItemCategory._id);
+                const res = await axiosInstance.post(`admin/subcategory/create`, formData);
+                const a = {
+                    key: fileList[0].originFileObj.uid,
+                    _id: res.data.data._id,
+                    image: res.data.data.image,
+                    name_ru: newItem.name_ru,
+                    name_en: newItem.name_en,
+                    name_tm: newItem.name_tm,
+                    category: newItemCategory.value,
+                }
+
+                setDataSource([...dataSource, a]);
             }
+            setNewItemCategory([]);
             setNewItem(null);
-            message.success('Успешно!')
+            message.success('Успешно добавлено');
             setAddOpen(false);
             setFileList([]);
             setConfirmLoading(false);
@@ -167,6 +214,7 @@ function Subcategories() {
     };
 
     const handleAddCancel = () => {
+        setNewItemCategory([]);
         setFileList([]);
         setNewItem(null);
         setAddOpen(false);
@@ -222,6 +270,29 @@ function Subcategories() {
         setNewItem({ ...newItem, [e.target.name]: [e.target.value] });
     }
 
+    //-------------------------------------------------------pagination -----------------------------------------//
+    const onPaginationChange = async (page) => {
+        let a = [];
+        const res = await axiosInstance.get(`admin/subcategory/list?page=${page}`);
+        res.data.results?.forEach(element => {
+            a.push({
+                _id: element._id,
+                key: element._id,
+                name_ru: element.name_ru,
+                name_en: element.name_en,
+                name_tm: element.name_tm,
+                image: element.image,
+                category: element.category.name_ru
+            })
+        });
+        setDataSource(a);
+    }
+
+    const handleUpdateSelectChange = (e) => {
+        const filtered = selectOptions.filter(item => item.value == e);
+        setNewItemCategory(filtered[0]);
+    }
+
     const handleTableChange = async (a, b, c) => {
         const data = [];
         if (c.field !== ordering?.field || c.order !== ordering?.order) {
@@ -237,21 +308,30 @@ function Subcategories() {
                 var query = `admin/subcategory/list?ordering=-${c.field}`;
             }
             axiosInstance.get(query).then(res => {
-                res.data?.forEach(element => {
-                    element.key = element._id
+                setTotal(res.data.count);
+                res.data?.results.forEach(element => {
+                    data.push({
+                        _id: element._id,
+                        key: element._id,
+                        name_ru: element.name_ru,
+                        name_en: element.name_en,
+                        name_tm: element.name_tm,
+                        image: element.image,
+                        category: element.category.name_ru
+                    })
                 });
-                setDataSource(res.data.data);
+                setDataSource(data);
             }).catch(err => console.log(err));
         }
     }
 
     useEffect(() => {
         axiosInstance.get(`admin/subcategory/list?search=${searchValue}`).then(res => {
-            res.data.data?.forEach(element => {
+            res?.data.results.forEach(element => {
                 element.key = element._id
             });
-            setDataSource(res.data.data);
-        })
+            setDataSource(res.data.results);
+        }).catch(err => console.log(err));
     }, [searchValue])
 
     return (
@@ -279,6 +359,9 @@ function Subcategories() {
                         <div className='add-column'>
                             Навзание (анг.):
                         </div>
+                        <div className='add-column'>
+                            Категория:
+                        </div>
                         <div className='add-picture'>
                             Logo
                         </div>
@@ -293,8 +376,21 @@ function Subcategories() {
                         <div className='add-column'>
                             <Input name='name_en' placeholder='Название (анг.)' value={newItem?.name_en} onChange={handleAddChange} />
                         </div>
+                        <div className='add-column'>
+                            <Select
+                                value={newItemCategory}
+                                showSearch
+                                allowClear
+                                style={{
+                                    width: '100%',
+                                }}
+                                placeholder="Выберите категорию"
+                                onChange={(e) => handleUpdateSelectChange(e)}
+                                options={selectOptions}
+                            />
+                        </div>
                         <div className='add-picture'>
-                            {newItem?._id && <img className='brand-image' src={'http://127.0.0.1:5000/' + newItem?.image} alt={newItem?.name_ru} />}
+                            {newItem?._id && <img className='subcategory-image' src={'http://127.0.0.1:5000/' + newItem?.image} alt={newItem?.name_ru} />}
                             <Upload
                                 customRequest={handleAddCustomRequest}
                                 listType="picture-card"
@@ -324,13 +420,19 @@ function Subcategories() {
             />
             <div className='page'>
                 <div className='page-header-content'>
-                    <h2>Подкатегории</h2>
+                    <h2>{`Подкатегории (${total})`}</h2>
                     <div className='add-button' onClick={showAddModal}>Добавить</div>
                 </div>
-                <div className='categories-header-filters'>
+                <div className='subcategories-header-filters'>
                     <Input placeholder='Search' size='middle' value={searchValue} allowClear onChange={(e) => setSearchValue(e.target.value)} />
                 </div>
-                <TableComponent active={selectedItem?._id} columns={columns} dataSource={dataSource} pagination={false} onChange={handleTableChange} />
+                <TableComponent
+                    active={selectedItem?._id}
+                    columns={columns}
+                    dataSource={dataSource}
+                    pagination={{ onChange: onPaginationChange, total: total, pageSize: 20, position: ['topRight', 'bottomRight'] }}
+                    onChange={handleTableChange}
+                />
             </div>
         </>
     );

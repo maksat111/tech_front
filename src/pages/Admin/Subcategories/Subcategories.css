@@ -18,3 +18,16 @@
     gap: 25px;
     margin-bottom: 25px;
 }
+
+.subcategories-header-filters {
+    display: flex;
+    flex-direction: row;
+    width: 500px;
+    gap: 25px;
+    margin-bottom: 0px;
+}
+
+.subcategory-image {
+    width: 220px;
+    height: 130px;
+}
