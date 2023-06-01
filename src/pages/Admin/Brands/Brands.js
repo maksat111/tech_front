@@ -39,12 +39,12 @@ function Brands() {
             let a = [];
             let b = [];
             setTotal(res.data.count)
-            res.data.results?.forEach(item => {
+            res.data.data?.forEach(item => {
                 a.push({
-                    key: item.id,
-                    id: item.id,
+                    key: item._id,
+                    _id: item._id,
                     name: item.name,
-                    logo: item.logo,
+                    image: item.image,
                 })
             });
             setDataSource(a);
@@ -57,7 +57,7 @@ function Brands() {
             dataIndex: 'logo',
             key: 'logo',
             render: (_, record) => (
-                <img className='brand-image' src={record.logo} alt='banner' />
+                <img className='brand-image' src={'http://127.0.0.1:5000/' + record.image} alt={record.name} />
             ),
         },
         {
@@ -100,10 +100,10 @@ function Brands() {
     const handleOk = async () => {
         try {
             setConfirmLoading(true);
-            await axiosInstance.delete(`brands/delete/${selectedItem.id}`);
-            const newDataSource = dataSource.filter(element => element.id !== selectedItem.id);
+            await axiosInstance.delete(`admin/brand/delete/${selectedItem._id}`);
+            const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
             setDataSource(newDataSource);
-            message.success('Успешно удалено')
+            message.success('Успешно удалено!')
             setOpen(false);
             setConfirmLoading(false);
         } catch (err) {
@@ -129,28 +129,32 @@ function Brands() {
             if (newItemCategory.length > 0) {
                 newItemCategory.forEach(async category => {
                     const formData = new FormData();
-                    formData.append("logo", fileList[0].originFileObj, fileList[0].originFileObj.name);
+                    formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
                     formData.append("name", newItemName);
-                    formData.append('category', category.id);
-                    const res = await axiosInstance.post(`brands/add/`, formData);
+                    const res = await axiosInstance.post(`admin/brand/create`, formData);
                     a.push({
-                        key: fileList[0].originFileObj.uid,
-                        id: Math.floor(Math.random() * 1000),
-                        logo: URL.createObjectURL(fileList[0].originFileObj),
+                        key: res.data.data._id,
+                        _id: res.data.data._id,
+                        image: res.data.data.image,
                         name: newItemName,
-                        category: category.name
                     })
                 })
             } else {
                 const formData = new FormData();
-                fileList[0] && formData.append("logo", fileList[0].originFileObj, fileList[0].originFileObj.name);
+                fileList[0] && formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
                 formData.append("name", newItemName);
-                const res = await axiosInstance.post(`brands/add/`, formData);
+                const res = await axiosInstance.post(`admin/brand/create`, formData);
+                a.push({
+                    key: res.data.data._id,
+                    _id: res.data.data._id,
+                    image: res.data.data.image,
+                    name: newItemName,
+                })
             }
             setNewItemCategory([]);
             setNewItemName('');
             setDataSource([...dataSource, ...a]);
-            message.success('Успешно добавлено');
+            message.success('Успешно добавлено!');
             setAddOpen(false);
             setFileList([]);
             // setNewItemActive(true);
@@ -193,8 +197,6 @@ function Brands() {
     //------------------------------------------------update modal--------------------------------------------//
     const showUpdateModal = (item) => {
         setSelectedItem(item);
-        const filtered = selectOptions.filter(category => category.label == item.category);
-        setNewItemCategory([{ id: filtered[0]?.id, label: item.category, value: item.category }])
         setNewItemName(item.name)
         setUpdateOpen(true);
     };
@@ -202,17 +204,14 @@ function Brands() {
     const handleUpdateOk = async () => {
         try {
             setConfirmLoading(true);
-            newItemCategory.forEach(async category => {
-                const formData = new FormData();
-                fileList[0] && formData.append("logo", fileList[0].originFileObj, fileList[0].originFileObj.name);
-                formData.append("name", newItemName);
-                category.id && formData.append('category', category.id);
-                const res = await axiosInstance.put(`brands/update/${selectedItem.id}/`, formData);
-            })
+            const formData = new FormData();
+            fileList[0] && formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
+            formData.append("name", newItemName);
+            const res = await axiosInstance.patch(`admin/brand/update/${selectedItem._id}`, formData);
             setDataSource(previousState => {
                 const a = previousState;
-                const index = a.findIndex(element => element.id === selectedItem.id);
-                if (fileList[0]) a[index].logo = URL.createObjectURL(fileList[0].originFileObj);
+                const index = a.findIndex(element => element._id === selectedItem._id);
+                if (fileList[0]) a[index].image = URL.createObjectURL(fileList[0].originFileObj);
                 a[index].name = newItemName;
                 if (newItemCategory[0]) a[index].category = newItemCategory[0].value;
                 return a;
@@ -221,7 +220,7 @@ function Brands() {
             setNewItemCategory([]);
             setNewItemName('');
             setConfirmLoading(false);
-            message.success('Успешно изменено');
+            message.success('Успешно изменено!');
             setUpdateOpen(false);
         } catch (err) {
             setConfirmLoading(false);
@@ -238,7 +237,7 @@ function Brands() {
     const handleUpdateSelectChange = (e) => {
         let a = [];
         selectOptions.forEach(item => {
-            e.forEach(selected => item.value == selected && a.push({ id: item.id, label: selected, value: selected }));
+            e.forEach(selected => item.value == selected && a.push({ _id: item._id, label: selected, value: selected }));
         });
         setNewItemCategory(a);
     }
@@ -273,7 +272,7 @@ function Brands() {
     const handleSelectChange = (e) => {
         let a = [];
         selectOptions.forEach(item => {
-            e.forEach(selected => item.value == selected && a.push({ id: item.id, label: selected, value: selected }));
+            e.forEach(selected => item.value == selected && a.push({ _id: item._id, label: selected, value: selected }));
         });
         setNewItemCategory(a);
     }
@@ -281,14 +280,13 @@ function Brands() {
     //-------------------------------------------------------pagination -----------------------------------------//
     const onPaginationChange = async (page) => {
         let a = [];
-        const res = await axiosInstance.get(`brands/list?page=${page}`);
+        const res = await axiosInstance.get(`admin/brand/list?page=${page}`);
         res.data.results?.forEach(item => {
             a.push({
-                key: item.id,
-                id: item.id,
+                key: item._id,
+                _id: item._id,
                 name: item.name,
-                logo: item.logo,
-                category: item.category ? item.category.name_ru : 'null'
+                image: item.image,
             });
         });
         setDataSource(a);
@@ -313,19 +311,17 @@ function Brands() {
                 return a;
             });
             if (c.order == 'ascend') {
-                var query = `brands/list?ordering=${c.field}`;
+                var query = `admin/brand/list?ordering=${c.field}`;
             } else {
-                var query = `brands/list?ordering=-${c.field}`;
+                var query = `admin/brand/list?ordering=-${c.field}`;
             }
             axiosInstance.get(query).then(res => {
-                console.log(res.data)
-                res.data.results?.forEach(item => {
+                res.data.data?.forEach(item => {
                     data.push({
-                        key: item.id,
-                        id: item.id,
+                        key: item._id,
+                        _id: item._id,
                         name: item.name,
-                        logo: item.logo,
-                        category: item.category ? item.category.name_ru : '-'
+                        image: item.image,
                     })
                 });
 
@@ -335,16 +331,15 @@ function Brands() {
     }
 
     useEffect(() => {
-        axiosInstance.get(`brands/list?search=${searchValue}`).then(res => {
+        axiosInstance.get(`admin/brand/list?search=${searchValue}`).then(res => {
             let a = [];
             setTotal(res.data.count)
-            res.data.results?.forEach(item => {
+            res.data.data?.forEach(item => {
                 a.push({
-                    key: item.id,
-                    id: item.id,
+                    key: item._id,
+                    _id: item._id,
                     name: item.name,
-                    logo: item.logo,
-                    category: item.category ? item.category.name_ru : '-'
+                    image: item.image,
                 })
             });
             setDataSource(a);
@@ -370,9 +365,6 @@ function Brands() {
                         <div className='add-column'>
                             Название
                         </div>
-                        <div className='add-column'>
-                            Категория
-                        </div>
                         <div className='add-picture'>
                             Logo
                         </div>
@@ -380,19 +372,6 @@ function Brands() {
                     <div className='add-right'>
                         <div className='add-column'>
                             <Input value={newItemName} allowClear size={'medium'} placeholder={'Название...'} onChange={(e) => setNewItemName(e.target.value)} />
-                        </div>
-                        <div className='add-column'>
-                            <Select
-                                value={newItemCategory}
-                                mode="multiple"
-                                allowClear
-                                style={{
-                                    width: '100%',
-                                }}
-                                placeholder="Выберите категорию"
-                                onChange={(e) => handleSelectChange(e)}
-                                options={selectOptions}
-                            />
                         </div>
                         <div className='add-picture'>
                             <Upload
@@ -425,9 +404,6 @@ function Brands() {
                         <div className='add-column'>
                             Название
                         </div>
-                        <div className='add-column'>
-                            Категория
-                        </div>
                         <div className='add-picture'>
                             Logo
                         </div>
@@ -436,21 +412,8 @@ function Brands() {
                         <div className='add-column'>
                             <Input value={newItemName} allowClear size={'medium'} placeholder={'Название...'} onChange={(e) => setNewItemName(e.target.value)} />
                         </div>
-                        <div className='add-column'>
-                            <Select
-                                value={newItemCategory}
-                                mode="multiple"
-                                allowClear
-                                style={{
-                                    width: '100%',
-                                }}
-                                placeholder="Выберите категорию"
-                                onChange={(e) => handleUpdateSelectChange(e)}
-                                options={selectOptions}
-                            />
-                        </div>
                         <div className='add-picture'>
-                            <img className='brand-image' src={selectedItem?.logo} alt='selected' />
+                            <img className='brand-image' src={'http://127.0.0.1:5000/' + selectedItem?.image} alt='selected' />
                             <Upload
                                 customRequest={handleAddCustomRequest}
                                 listType="picture-card"
@@ -486,21 +449,11 @@ function Brands() {
                 </div>
                 <div className='brands-header-filters'>
                     <Input placeholder='Search' size='middle' value={searchValue} allowClear onChange={(e) => setSearchValue(e.target.value)} />
-                    <Select
-                        value={newItemCategory}
-                        allowClear
-                        style={{
-                            width: '100%',
-                        }}
-                        placeholder="Выберите категорию"
-                        onChange={(e) => handleFilterChange(e)}
-                        options={selectOptions}
-                    />
                 </div>
                 <TableComponent
                     onChange={handleTableChange}
                     rowClassName={(record, rowIndex) => rowIndex == 2 && 'salam'}
-                    active={selectedItem?.id}
+                    active={selectedItem?._id}
                     columns={columns}
                     dataSource={dataSource}
                     pagination={{ onChange: onPaginationChange, total: total, pageSize: 20, position: ['topRight', 'bottomRight'] }}

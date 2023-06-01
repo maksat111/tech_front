@@ -140,7 +140,7 @@ function Banners(props) {
                 a[index].is_active = !a[index].is_active
                 return a
             });
-            message.success('Успешно изменено')
+            message.success('Успешно изменено!')
             setOpenActive(false);
             setConfirmLoading(false);
         } catch (err) {
@@ -216,8 +216,11 @@ function Banners(props) {
     };
 
     const handleUpdateOk = async () => {
+        setConfirmLoading(true);
+        const formData = new FormData();
+        formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
         try {
-            await axiosInstance.patch(`admin/banner/update/${selectedItem._id}`)
+            await axiosInstance.patch(`admin/banner/update/${selectedItem._id}`, formData)
             setDataSource(previousState => {
                 const a = previousState;
                 const index = a.findIndex(element => element._id === selectedItem._id);
@@ -227,9 +230,11 @@ function Banners(props) {
             setFileList([]);
             message.success('Успешно изменено!');
             setOpenUpdate(false);
+            setConfirmLoading(false);
         } catch (err) {
             message.error('Произошла ошибка. Пожалуйста, попробуйте еще раз!');
             setOpenUpdate(false);
+            setConfirmLoading(false);
             console.log(err)
         }
     }
