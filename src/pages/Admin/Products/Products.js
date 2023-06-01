@@ -384,7 +384,7 @@ function Products() {
                 okText={'Да'}
                 width={'800px'}
                 okType={'primary'}
-                style={{ top: '20px' }}
+                style={{ top: '20px', bottom: '0px' }}
             >
                 <div className='banner-add-container'>
                     <div className='add-left'>
@@ -408,6 +408,15 @@ function Products() {
                         </div>
                         <div className='add-picture'>
                             Главный изображения
+                        </div>
+                        <div className='add-textarea'>
+                            Полное описание (рус.):
+                        </div>
+                        <div className='add-textarea'>
+                            Полное описание (туркм.):
+                        </div>
+                        <div className='add-textarea'>
+                            Полное описание (анг.):
                         </div>
                     </div>
                     <div className='add-right'>
@@ -470,6 +479,15 @@ function Products() {
                             >
                                 {fileList.length == 0 && uploadButton}
                             </Upload>
+                        </div>
+                        <div className='add-textarea'>
+                            <Input.TextArea rows={5} name='desctiption_ru' placeholder='Полное описание (рус.)' value={newItem?.desctiption_ru} onChange={handleAddChange} />
+                        </div>
+                        <div className='add-textarea'>
+                            <Input.TextArea rows={5} name='desctiption_tm' placeholder='Полное описание (туркм.)' value={newItem?.desctiption_tm} onChange={handleAddChange} />
+                        </div>
+                        <div className='add-textarea'>
+                            <Input.TextArea rows={5} name='desctiption_en' placeholder='Полное описание (анг.)' value={newItem?.desctiption_en} onChange={handleAddChange} />
                         </div>
                     </div>
                 </div>

@@ -44,6 +44,21 @@ code {
   background-color: gray;
 }
 
+.ant-modal-wrap::-webkit-scrollbar-track {
+  border-radius: 0.125rem;
+  background-color: rgb(221, 220, 220);
+}
+
+.ant-modal-wrap::-webkit-scrollbar {
+  width: 0.4rem;
+  border-radius: 0.125rem;
+}
+
+.ant-modal-wrap::-webkit-scrollbar-thumb {
+  border-radius: 0.125rem;
+  background-color: gray;
+}
+
 .loading-spin {
   animation: spin 0.9s infinite;
 }
