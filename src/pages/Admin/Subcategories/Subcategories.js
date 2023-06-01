@@ -274,7 +274,7 @@ function Subcategories() {
     const onPaginationChange = async (page) => {
         let a = [];
         const res = await axiosInstance.get(`admin/subcategory/list?page=${page}`);
-        res.data.results?.forEach(element => {
+        res.data.data?.forEach(element => {
             a.push({
                 _id: element._id,
                 key: element._id,
@@ -309,7 +309,7 @@ function Subcategories() {
             }
             axiosInstance.get(query).then(res => {
                 setTotal(res.data.count);
-                res.data?.results.forEach(element => {
+                res.data?.data.forEach(element => {
                     data.push({
                         _id: element._id,
                         key: element._id,
@@ -327,10 +327,10 @@ function Subcategories() {
 
     useEffect(() => {
         axiosInstance.get(`admin/subcategory/list?search=${searchValue}`).then(res => {
-            res?.data.results.forEach(element => {
+            res?.data.data.forEach(element => {
                 element.key = element._id
             });
-            setDataSource(res.data.results);
+            setDataSource(res.data.data);
         }).catch(err => console.log(err));
     }, [searchValue])
 
@@ -420,7 +420,8 @@ function Subcategories() {
             />
             <div className='page'>
                 <div className='page-header-content'>
-                    <h2>{`Подкатегории (${total})`}</h2>
+                    {/* <h2>{`Подкатегории (${total})`}</h2> */}
+                    <h2>{`Подкатегории`}</h2>
                     <div className='add-button' onClick={showAddModal}>Добавить</div>
                 </div>
                 <div className='subcategories-header-filters'>
