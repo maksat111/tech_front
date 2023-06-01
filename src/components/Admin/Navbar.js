@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'antd';
-import logo from '../../images/logo.png';
+import logo from '../../images/logo.svg';
 import './Navbar.css';
 import { AiOutlineUser } from 'react-icons/ai';
 import { FiLogOut } from 'react-icons/fi';

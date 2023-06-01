@@ -151,8 +151,7 @@ function Subcategories() {
     const showAddModal = (item) => {
         if (item._id) {
             setSelectedItem(item);
-            const filtered = selectOptions.filter(category => category.label == item.category);
-            setNewItemCategory({ _id: filtered[0]?._id, label: item.category, value: item.category })
+            setNewItemCategory({ _id: item.category._id, label: item.category.name_ru, value: item.category.name_ru });
             setNewItem(item);
         }
         setAddOpen(true);

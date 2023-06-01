@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { BeatLoader } from 'react-spinners';
-import Logo from '../images/logo.png';
+import Logo from '../images/logo.svg';
 import { isLogin } from '../utils/isLogin';
 import './PageLoading.css';
 

@@ -4,7 +4,6 @@ import { AiOutlineLoading, AiOutlineUser, AiOutlineEye, AiOutlineEyeInvisible, A
 import './Login.css'
 import { loginPost } from '../../../config/axios';
 import { message } from 'antd';
-import Logo from '../../../images/logo.png';
 
 const Login = () => {
     const navigate = useNavigate();
