@@ -13,7 +13,7 @@ function Navbar() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const data = JSON.parse(localStorage.getItem('ertir-admin'));
+        const data = JSON.parse(localStorage.getItem('computershop-admin'));
         setProfileName(data?.name + " " + data?.surname);
     }, [])
 

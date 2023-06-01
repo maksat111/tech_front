@@ -16,7 +16,7 @@ const Login = () => {
         setLoading(true);
         try {
             const res = await loginPost(username, password);
-            localStorage.setItem('ertir-admin', JSON.stringify(res.data.data));
+            localStorage.setItem('computershop-admin', JSON.stringify(res.data.data));
             message.success('Successfully!');
             setLoading(false);
             window.location.pathname = '/admin/banners';

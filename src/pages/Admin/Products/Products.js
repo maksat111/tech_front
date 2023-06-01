@@ -3,6 +3,7 @@ import TableComponent from '../../../components/Admin/TableComponent';
 import { axiosInstance } from '../../../config/axios';
 import { Modal, message, Upload, Checkbox, Select } from 'antd'
 import { PlusOutlined } from '@ant-design/icons';
+import './Products.css';
 import '../Subcategories/Subcategories.css';
 import Input from 'antd/es/input/Input';
 
@@ -25,18 +26,25 @@ function Products() {
     const [addOpen, setAddOpen] = useState(false);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [selectOptions, setSelectOptions] = useState(null);
+    const [subcategoryOptions, setSubcategoryOptions] = useState(null);
+    const [brandOptions, setBrandOptions] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
     const [newItemCategory, setNewItemCategory] = useState([]);
+    const [newItemSubCategory, setNewItemSubCategory] = useState([]);
+    const [newItemBrand, setNewItemBrand] = useState([]);
     const [newItem, setNewItem] = useState(null);
     const [searchValue, setSearchValue] = useState('');
     const [ordering, setOrdering] = useState({})
 
     useEffect(() => {
-        axiosInstance.get('admin/subcategory/list').then(async (res) => {
+        axiosInstance.get('admin/product/list').then(async (res) => {
             let a = [];
             let b = [];
+            let c = [];
+            let d = [];
             setTotal(res.data.count);
+            console.log(res.data.data)
             res.data?.data.forEach(element => {
                 a.push({
                     _id: element._id,
@@ -57,7 +65,28 @@ function Products() {
                     _id: item._id
                 })
             });
+
             setSelectOptions(b);
+
+            const subcategories = await axiosInstance.get('admin/subcategory/list');
+            subcategories.data.data?.forEach(item => {
+                c.push({
+                    label: item.name_ru,
+                    value: item.name_ru,
+                    _id: item._id
+                })
+            });
+            setSubcategoryOptions(c)
+
+            const brands = await axiosInstance.get('admin/brand/list');
+            brands.data.data?.forEach(item => {
+                d.push({
+                    label: item.name,
+                    value: item.name,
+                    _id: item._id
+                })
+            });
+            setBrandOptions(d)
         }).catch(err => console.log(err))
     }, [])
 
@@ -131,7 +160,7 @@ function Products() {
         try {
             setConfirmLoading(true);
             const newDataSource = dataSource.filter(element => element._id !== selectedItem._id);
-            await axiosInstance.delete(`admin/subcategory/delete/${selectedItem._id}/`);
+            await axiosInstance.delete(`admin/product/delete/${selectedItem._id}/`);
             setDataSource(newDataSource);
             message.success('Успешно удалено!')
             setOpen(false);
@@ -166,7 +195,7 @@ function Products() {
                 formData.append("name_en", newItem.name_en);
                 formData.append("name_tm", newItem.name_tm);
                 formData.append('category', newItemCategory._id);
-                const res = await axiosInstance.patch(`admin/subcategory/update/${newItem._id}`, formData);
+                const res = await axiosInstance.patch(`admin/product/update/${newItem._id}`, formData);
                 const index = dataSource.findIndex(item => item._id == newItem._id);
                 setDataSource(previousState => {
                     const a = previousState;
@@ -186,7 +215,7 @@ function Products() {
                 formData.append("name_en", newItem.name_en);
                 formData.append("name_tm", newItem.name_tm);
                 formData.append('category', newItemCategory._id);
-                const res = await axiosInstance.post(`admin/subcategory/create`, formData);
+                const res = await axiosInstance.post(`admin/product/create`, formData);
                 const a = {
                     key: fileList[0].originFileObj.uid,
                     _id: res.data.data._id,
@@ -272,7 +301,7 @@ function Products() {
     //-------------------------------------------------------pagination -----------------------------------------//
     const onPaginationChange = async (page) => {
         let a = [];
-        const res = await axiosInstance.get(`admin/subcategory/list?page=${page}`);
+        const res = await axiosInstance.get(`admin/product/list?page=${page}`);
         res.data.data?.forEach(element => {
             a.push({
                 _id: element._id,
@@ -292,6 +321,16 @@ function Products() {
         setNewItemCategory(filtered[0]);
     }
 
+    const handleSubcategoryChange = (e) => {
+        const filtered = subcategoryOptions.filter(item => item.value == e);
+        setNewItemSubCategory(filtered[0]);
+    }
+
+    const handleBrandChange = (e) => {
+        const filtered = brandOptions.filter(item => item.value == e);
+        setNewItemBrand(filtered[0]);
+    }
+
     const handleTableChange = async (a, b, c) => {
         const data = [];
         if (c.field !== ordering?.field || c.order !== ordering?.order) {
@@ -302,9 +341,9 @@ function Products() {
                 return a;
             });
             if (c.order == 'ascend') {
-                var query = `admin/subcategory/list?ordering=${c.field}`;
+                var query = `admin/product/list?ordering=${c.field}`;
             } else {
-                var query = `admin/subcategory/list?ordering=-${c.field}`;
+                var query = `admin/product/list?ordering=-${c.field}`;
             }
             axiosInstance.get(query).then(res => {
                 setTotal(res.data.count);
@@ -325,7 +364,7 @@ function Products() {
     }
 
     useEffect(() => {
-        axiosInstance.get(`admin/subcategory/list?search=${searchValue}`).then(res => {
+        axiosInstance.get(`admin/product/list?search=${searchValue}`).then(res => {
             res?.data.data.forEach(element => {
                 element.key = element._id
             });
@@ -343,9 +382,9 @@ function Products() {
                 onCancel={handleAddCancel}
                 cancelText={'Отмена'}
                 okText={'Да'}
-                width={'600px'}
+                width={'800px'}
                 okType={'primary'}
-                style={{ top: '100px' }}
+                style={{ top: '20px' }}
             >
                 <div className='banner-add-container'>
                     <div className='add-left'>
@@ -361,8 +400,14 @@ function Products() {
                         <div className='add-column'>
                             Категория:
                         </div>
+                        <div className='add-column'>
+                            Подкатегория:
+                        </div>
+                        <div className='add-column'>
+                            Бренд:
+                        </div>
                         <div className='add-picture'>
-                            Logo
+                            Главный изображения
                         </div>
                     </div>
                     <div className='add-right'>
@@ -386,6 +431,32 @@ function Products() {
                                 placeholder="Выберите категорию"
                                 onChange={(e) => handleUpdateSelectChange(e)}
                                 options={selectOptions}
+                            />
+                        </div>
+                        <div className='add-column'>
+                            <Select
+                                value={newItemSubCategory}
+                                showSearch
+                                allowClear
+                                style={{
+                                    width: '100%',
+                                }}
+                                placeholder="Выберите подкатегорию"
+                                onChange={(e) => handleSubcategoryChange(e)}
+                                options={subcategoryOptions}
+                            />
+                        </div>
+                        <div className='add-column'>
+                            <Select
+                                value={newItemBrand}
+                                showSearch
+                                allowClear
+                                style={{
+                                    width: '100%',
+                                }}
+                                placeholder="Выберите подкатегорию"
+                                onChange={(e) => handleBrandChange(e)}
+                                options={brandOptions}
                             />
                         </div>
                         <div className='add-picture'>

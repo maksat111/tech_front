@@ -1,0 +1,10 @@
+.add-right {
+    width: 500px;
+}
+
+.add-column {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    min-height: 35px;
+}
