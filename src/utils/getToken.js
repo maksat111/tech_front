@@ -1,5 +1,5 @@
 export const getToken = () => {
-    let data = JSON.parse(localStorage.getItem('ertir-admin'));
+    let data = JSON.parse(localStorage.getItem('computershop-admin'));
     if (data) {
         return data.token
     } else {

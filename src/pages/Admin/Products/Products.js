@@ -45,15 +45,21 @@ function Products() {
             let d = [];
             setTotal(res.data.count);
             console.log(res.data.data)
+            console.log(res.data.data)
             res.data?.data.forEach(element => {
                 a.push({
-                    _id: element._id,
                     key: element._id,
+                    _id: element._id,
+                    main_image: element.main_image,
                     name_ru: element.name_ru,
                     name_en: element.name_en,
                     name_tm: element.name_tm,
-                    image: element.image,
-                    category: element.category.name_ru
+                    description_tm: element.description_tm,
+                    description_ru: element.description_ru,
+                    description_en: element.description_en,
+                    category: element.category.name_ru,
+                    subcategory: element.subcategory.name_ru,
+                    brand: element.brand.name,
                 })
             });
             setDataSource(a);
@@ -92,23 +98,17 @@ function Products() {
 
     const columns = [
         {
+            title: 'Главная картинка',
+            dataIndex: 'main_image',
+            key: 'main_image',
+            render: (_, record) => (
+                <img className='subcategory-image' src={'http://127.0.0.1:5000/' + record.main_image} alt={record.name_ru} />
+            ),
+        },
+        {
             title: 'Название (рус.)',
             dataIndex: 'name_ru',
             key: 'name_ru',
-            sorter: true,
-            sortDirections: ['ascend', 'descend', 'ascend'],
-        },
-        {
-            title: 'Название (туркм.)',
-            dataIndex: 'name_tm',
-            key: 'name_tm',
-            sorter: true,
-            sortDirections: ['ascend', 'descend', 'ascend'],
-        },
-        {
-            title: 'Навзание (анг.)',
-            dataIndex: 'name_en',
-            key: 'name_en',
             sorter: true,
             sortDirections: ['ascend', 'descend', 'ascend'],
         },
@@ -120,12 +120,18 @@ function Products() {
             sortDirections: ['ascend', 'descend', 'ascend'],
         },
         {
-            title: 'Logo',
-            dataIndex: 'image',
-            key: 'image',
-            render: (_, record) => (
-                <img className='subcategory-image' src={'http://127.0.0.1:5000/' + record.image} alt={record.name_ru} />
-            ),
+            title: 'Подкатегория',
+            dataIndex: 'subcategory',
+            key: 'subcategory',
+            sorter: true,
+            sortDirections: ['ascend', 'descend', 'ascend'],
+        },
+        {
+            title: 'Бренд',
+            dataIndex: 'brand',
+            key: 'brand',
+            sorter: true,
+            sortDirections: ['ascend', 'descend', 'ascend'],
         },
         {
             title: 'Удалить',
@@ -181,6 +187,8 @@ function Products() {
         if (item._id) {
             setSelectedItem(item);
             setNewItemCategory({ _id: item.category._id, label: item.category.name_ru, value: item.category.name_ru });
+            setNewItemSubCategory({ _id: item.category._id, label: item.category.name_ru, value: item.category.name_ru });
+            setNewItemBrand({ _id: item.category._id, label: item.category.name_ru, value: item.category.name_ru });
             setNewItem(item);
         }
         setAddOpen(true);
@@ -188,13 +196,19 @@ function Products() {
 
     const handleAddOk = async () => {
         try {
+            setConfirmLoading(true);
+            const formData = new FormData();
+            fileList[0] && formData.append("main_image", fileList[0].originFileObj, fileList[0].originFileObj.name);
+            formData.append("name_ru", newItem.name_ru);
+            formData.append("name_en", newItem.name_en);
+            formData.append("name_tm", newItem.name_tm);
+            formData.append("description_ru", newItem.description_ru);
+            formData.append("description_en", newItem.description_en);
+            formData.append("description_tm", newItem.description_tm);
+            formData.append('category', newItemCategory._id);
+            formData.append('subcategory', newItemSubCategory._id);
+            formData.append('brand', newItemBrand._id);
             if (newItem._id) {
-                const formData = new FormData();
-                fileList[0] && formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
-                formData.append("name_ru", newItem.name_ru);
-                formData.append("name_en", newItem.name_en);
-                formData.append("name_tm", newItem.name_tm);
-                formData.append('category', newItemCategory._id);
                 const res = await axiosInstance.patch(`admin/product/update/${newItem._id}`, formData);
                 const index = dataSource.findIndex(item => item._id == newItem._id);
                 setDataSource(previousState => {
@@ -202,47 +216,52 @@ function Products() {
                     a[index].name_ru = newItem.name_ru;
                     a[index].name_en = newItem.name_en;
                     a[index].name_tm = newItem.name_tm;
-                    a[index].image = res.data.data.image;
+                    a[index].description_ru = newItem.description_ru;
+                    a[index].description_en = newItem.description_en;
+                    a[index].description_tm = newItem.description_tm;
+                    a[index].main_image = res.data.data.main_image;
                     a[index].category = newItemCategory.value;
+                    a[index].subcategory = newItemSubCategory.value;
+                    a[index].brand = newItemBrand.value;
                     return a;
                 })
             } else {
-                setConfirmLoading(true);
-
-                const formData = new FormData();
-                formData.append("image", fileList[0].originFileObj, fileList[0].originFileObj.name);
-                formData.append("name_ru", newItem.name_ru);
-                formData.append("name_en", newItem.name_en);
-                formData.append("name_tm", newItem.name_tm);
-                formData.append('category', newItemCategory._id);
                 const res = await axiosInstance.post(`admin/product/create`, formData);
                 const a = {
-                    key: fileList[0].originFileObj.uid,
+                    key: res.data.data._id,
                     _id: res.data.data._id,
-                    image: res.data.data.image,
+                    main_image: res.data.data.main_image,
                     name_ru: newItem.name_ru,
                     name_en: newItem.name_en,
                     name_tm: newItem.name_tm,
+                    description_tm: newItem.description_tm,
+                    description_ru: newItem.description_ru,
+                    description_en: newItem.description_en,
                     category: newItemCategory.value,
+                    subcategory: newItemSubCategory.value,
+                    brand: newItemBrand.value,
                 }
 
                 setDataSource([...dataSource, a]);
             }
             setNewItemCategory([]);
-            setNewItem(null);
-            message.success('Успешно добавлено');
-            setAddOpen(false);
+            setNewItemSubCategory([]);
+            setNewItemBrand([]);
             setFileList([]);
+            setNewItem(null);
+            message.success('Успешно добавлено!');
+            setAddOpen(false);
             setConfirmLoading(false);
         } catch (err) {
             setConfirmLoading(false)
             message.error('Произошла ошибка. Пожалуйста, попробуйте еще раз!')
-            console.log(err)
         }
     };
 
     const handleAddCancel = () => {
         setNewItemCategory([]);
+        setNewItemSubCategory([]);
+        setNewItemBrand([]);
         setFileList([]);
         setNewItem(null);
         setAddOpen(false);
@@ -304,13 +323,18 @@ function Products() {
         const res = await axiosInstance.get(`admin/product/list?page=${page}`);
         res.data.data?.forEach(element => {
             a.push({
-                _id: element._id,
                 key: element._id,
+                _id: element._id,
+                main_image: element.main_image,
                 name_ru: element.name_ru,
                 name_en: element.name_en,
                 name_tm: element.name_tm,
-                image: element.image,
-                category: element.category.name_ru
+                description_tm: element.description_tm,
+                description_ru: element.description_ru,
+                description_en: element.description_en,
+                category: element.category.name_ru,
+                subcategory: element.subcategory.name_ru,
+                brand: element.brand.name,
             })
         });
         setDataSource(a);
@@ -349,13 +373,18 @@ function Products() {
                 setTotal(res.data.count);
                 res.data?.data.forEach(element => {
                     data.push({
-                        _id: element._id,
                         key: element._id,
+                        _id: element._id,
+                        main_image: element.main_image,
                         name_ru: element.name_ru,
                         name_en: element.name_en,
                         name_tm: element.name_tm,
-                        image: element.image,
-                        category: element.category.name_ru
+                        description_tm: element.description_tm,
+                        description_ru: element.description_ru,
+                        description_en: element.description_en,
+                        category: element.category.name_ru,
+                        subcategory: element.subcategory.name_ru,
+                        brand: element.brand.name,
                     })
                 });
                 setDataSource(data);
@@ -366,7 +395,10 @@ function Products() {
     useEffect(() => {
         axiosInstance.get(`admin/product/list?search=${searchValue}`).then(res => {
             res?.data.data.forEach(element => {
-                element.key = element._id
+                element.key = element._id;
+                element.category = element.category.name_ru;
+                element.subcategory = element.subcategory.name_ru;
+                element.brand = element.brand.name;
             });
             setDataSource(res.data.data);
         }).catch(err => console.log(err));
@@ -469,7 +501,7 @@ function Products() {
                             />
                         </div>
                         <div className='add-picture'>
-                            {newItem?._id && <img className='subcategory-image' src={'http://127.0.0.1:5000/' + newItem?.image} alt={newItem?.name_ru} />}
+                            {newItem?._id && <img className='subcategory-image' src={'http://127.0.0.1:5000/' + newItem?.main_image} alt={newItem?.name_ru} />}
                             <Upload
                                 customRequest={handleAddCustomRequest}
                                 listType="picture-card"
