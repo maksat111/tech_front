@@ -269,9 +269,9 @@ function Clients() {
                         <div className='add-column'>
                             Пароль:
                         </div>
-                        <div className='add-column'>
+                        {newItem?._id && <div className='add-column'>
                             Новый пароль:
-                        </div>
+                        </div>}
                     </div>
                     <div className='add-right'>
                         <div className='add-column'>
@@ -289,9 +289,9 @@ function Clients() {
                         <div className='add-column'>
                             <Input name='password' placeholder='Пароль' value={newItem?.password} onChange={handleAddChange} />
                         </div>
-                        <div className='add-column'>
+                        {newItem?._id && <div className='add-column'>
                             <Input name='new_password' placeholder='Новый Пароль' value={newItem?.new_password} onChange={handleAddChange} />
-                        </div>
+                        </div>}
                     </div>
                 </form>
             </Modal>
