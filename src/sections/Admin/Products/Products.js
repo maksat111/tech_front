@@ -44,8 +44,6 @@ function Products() {
             let c = [];
             let d = [];
             setTotal(res.data.count);
-            console.log(res.data.data)
-            console.log(res.data.data)
             res.data?.data.forEach(element => {
                 a.push({
                     key: element._id,

@@ -3,14 +3,14 @@ import { Navigate, useRoutes } from "react-router-dom";
 import Loading from '../components/Loading';
 import PageLoading from '../components/PageLoading';
 
-const Login = lazy(() => import('../pages/Admin/Login/Login'));
-const Banners = lazy(() => import('../pages/Admin/Banners/Banners'));
-const Brands = lazy(() => import('../pages/Admin/Brands/Brands'));
-const Categories = lazy(() => import('../pages/Admin/Categories/Categories'));
-const Clients = lazy(() => import('../pages/Admin/Clients/Clients'));
-const Products = lazy(() => import('../pages/Admin/Products/Products'));
-const Subcategories = lazy(() => import('../pages/Admin/Subcategories/Subcategories'));
-const Users = lazy(() => import('../pages/Admin/Users/Users'));
+const Login = lazy(() => import('../sections/Admin/Login/Login'));
+const Banners = lazy(() => import('../sections/Admin/Banners/Banners'));
+const Brands = lazy(() => import('../sections/Admin/Brands/Brands'));
+const Categories = lazy(() => import('../sections/Admin/Categories/Categories'));
+const Clients = lazy(() => import('../sections/Admin/Clients/Clients'));
+const Products = lazy(() => import('../sections/Admin/Products/Products'));
+const Subcategories = lazy(() => import('../sections/Admin/Subcategories/Subcategories'));
+const Users = lazy(() => import('../sections/Admin/Users/Users'));
 
 const SideBarNavbar = lazy(() => import('./SidebarNavbar'));
 

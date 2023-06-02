@@ -144,7 +144,7 @@ function Categories() {
                     a[index].name_ru = newItem.name_ru;
                     a[index].name_en = newItem.name_en;
                     a[index].name_tk = newItem.name_tk;
-                    a[index].image = res.data.data.image;
+                    a[index].main_image = res.data.data.main_image;
                     return a;
                 })
             } else {
