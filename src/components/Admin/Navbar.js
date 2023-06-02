@@ -25,8 +25,8 @@ function Navbar() {
     };
 
     const handleOk = () => {
-        localStorage.removeItem('ertir-admin');
-        navigate('/');
+        localStorage.removeItem('computershop-admin');
+        navigate('/admin');
     };
 
     const handleCancel = () => {

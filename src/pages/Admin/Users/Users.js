@@ -269,6 +269,9 @@ function Users() {
                         <div className='add-column'>
                             Пароль:
                         </div>
+                        {newItem?._id && <div className='add-column'>
+                            Новый пароль:
+                        </div>}
                     </div>
                     <div className='add-right'>
                         <div className='add-column'>
@@ -284,8 +287,11 @@ function Users() {
                             <Input name='phone_number' type='number' required placeholder='Номер телефона' value={newItem?.phone_number} onChange={handleAddChange} />
                         </div>
                         <div className='add-column'>
-                            <Input name='password' placeholder='Новый пароль' value={newItem?.password} onChange={handleAddChange} />
+                            <Input name='password' placeholder='Пароль' value={newItem?.password} onChange={handleAddChange} />
                         </div>
+                        {newItem?._id && <div className='add-column'>
+                            <Input name='new_password' placeholder='Новый пароль' value={newItem?.new_password} onChange={handleAddChange} />
+                        </div>}
                     </div>
                 </form>
             </Modal>

@@ -269,6 +269,9 @@ function Clients() {
                         <div className='add-column'>
                             Пароль:
                         </div>
+                        <div className='add-column'>
+                            Новый пароль:
+                        </div>
                     </div>
                     <div className='add-right'>
                         <div className='add-column'>
@@ -284,7 +287,10 @@ function Clients() {
                             <Input name='phone_number' type='number' required placeholder='Номер телефона' value={newItem?.phone_number} onChange={handleAddChange} />
                         </div>
                         <div className='add-column'>
-                            <Input name='password' placeholder='Новый пароль' value={newItem?.password} onChange={handleAddChange} />
+                            <Input name='password' placeholder='Пароль' value={newItem?.password} onChange={handleAddChange} />
+                        </div>
+                        <div className='add-column'>
+                            <Input name='new_password' placeholder='Новый Пароль' value={newItem?.new_password} onChange={handleAddChange} />
                         </div>
                     </div>
                 </form>

@@ -52,6 +52,7 @@
     flex-direction: row;
     justify-content: space-around;
     font-weight: 450;
+    gap: 20px;
 }
 
 .add-picture {

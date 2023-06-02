@@ -499,7 +499,7 @@ function Products() {
                                 style={{
                                     width: '100%',
                                 }}
-                                placeholder="Выберите подкатегорию"
+                                placeholder="Выберите Бренд"
                                 onChange={(e) => handleBrandChange(e)}
                                 options={brandOptions}
                             />
