@@ -186,10 +186,14 @@ function Products() {
     const showAddModal = (item) => {
         if (item._id) {
             setSelectedItem(item);
-            setNewItemCategory({ _id: item.category._id, label: item.category.name_ru, value: item.category.name_ru });
-            setNewItemSubCategory({ _id: item.category._id, label: item.category.name_ru, value: item.category.name_ru });
-            setNewItemBrand({ _id: item.category._id, label: item.category.name_ru, value: item.category.name_ru });
+            const filteredCategory = selectOptions.filter(e => e.value == item.category);
+            setNewItemCategory(filteredCategory[0]);
+            const filteredSubcategory = subcategoryOptions.filter(e => e.value == item.subcategory);
+            setNewItemSubCategory(filteredSubcategory[0]);
+            const filteredBrand = brandOptions.filter(e => e.value == item.brand);
+            setNewItemBrand(filteredBrand[0]);
             setNewItem(item);
+            console.log(item)
         }
         setAddOpen(true);
     };
@@ -513,13 +517,13 @@ function Products() {
                             </Upload>
                         </div>
                         <div className='add-textarea'>
-                            <Input.TextArea rows={5} name='desctiption_ru' placeholder='Полное описание (рус.)' value={newItem?.desctiption_ru} onChange={handleAddChange} />
+                            <Input.TextArea rows={5} name='description_ru' placeholder='Полное описание (рус.)' value={newItem?.description_ru} onChange={handleAddChange} />
                         </div>
                         <div className='add-textarea'>
-                            <Input.TextArea rows={5} name='desctiption_tm' placeholder='Полное описание (туркм.)' value={newItem?.desctiption_tm} onChange={handleAddChange} />
+                            <Input.TextArea rows={5} name='description_tm' placeholder='Полное описание (туркм.)' value={newItem?.description_tm} onChange={handleAddChange} />
                         </div>
                         <div className='add-textarea'>
-                            <Input.TextArea rows={5} name='desctiption_en' placeholder='Полное описание (анг.)' value={newItem?.desctiption_en} onChange={handleAddChange} />
+                            <Input.TextArea rows={5} name='description_en' placeholder='Полное описание (анг.)' value={newItem?.description_en} onChange={handleAddChange} />
                         </div>
                     </div>
                 </div>
