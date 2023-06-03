@@ -229,6 +229,7 @@ function Products() {
                 })
             } else {
                 const res = await axiosInstance.post(`admin/product/create`, formData);
+                if (res.data.success === 0) message.error(res.data.msg);
                 const a = {
                     key: res.data.data._id,
                     _id: res.data.data._id,
@@ -255,7 +256,8 @@ function Products() {
             setAddOpen(false);
             setConfirmLoading(false);
         } catch (err) {
-            setConfirmLoading(false)
+            setConfirmLoading(false);
+            console.log(err);
             message.error('Произошла ошибка. Пожалуйста, попробуйте еще раз!')
         }
     };
@@ -542,7 +544,6 @@ function Products() {
             />
             <div className='page'>
                 <div className='page-header-content'>
-                    {/* <h2>{`Подкатегории (${total})`}</h2> */}
                     <h2>{`Товары`}</h2>
                     <div className='add-button' onClick={showAddModal}>Добавить</div>
                 </div>
