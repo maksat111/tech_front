@@ -11,8 +11,10 @@ const Clients = lazy(() => import('../sections/Admin/Clients/Clients'));
 const Products = lazy(() => import('../sections/Admin/Products/Products'));
 const Subcategories = lazy(() => import('../sections/Admin/Subcategories/Subcategories'));
 const Users = lazy(() => import('../sections/Admin/Users/Users'));
-
 const SideBarNavbar = lazy(() => import('./SidebarNavbar'));
+//Client
+const Navbar = lazy(() => import('../sections/Client/components/Navbar'));
+
 
 function Router() {
     let routes = useRoutes([
@@ -52,6 +54,10 @@ function Router() {
                     path: '/admin/users'
                 },
             ]
+        },
+        {
+            element: <Navbar />,
+            path: '/'
         },
         {
             element: <Navigate to='/' />,
