@@ -32,6 +32,9 @@ input {
 }
 
 .login_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 45px;
     background-color: rgb(7, 7, 175);
@@ -41,6 +44,7 @@ input {
     border-radius: 10px;
     transition: 0.3s;
     cursor: pointer;
+    -moz-user-select: none;
 }
 
 .login_button:hover {
