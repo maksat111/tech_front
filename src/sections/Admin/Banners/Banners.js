@@ -390,7 +390,7 @@ function Banners(props) {
             </Modal>
             <div className='banners-container page'>
                 <div className='banners-header-container'>
-                    <h2>Баннеры</h2>
+                    <h2 className="admin-section-name">Баннеры</h2>
                     <div className='add-button' onClick={showAddModal}>Добавлять</div>
                 </div>
                 <TableComponent dataSource={dataSource} columns={columns} pagination={false} active={selectedItem?._id} />

@@ -183,3 +183,9 @@ code {
   word-wrap: break-word;
   word-break: break-all;
 }
+
+.admin-section-name {
+  font-size: 23px;
+  font-weight: 600;
+  color: rgb(7, 5, 121);
+}
