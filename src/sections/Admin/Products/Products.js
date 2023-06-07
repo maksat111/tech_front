@@ -524,13 +524,13 @@ function Products() {
                                 </Upload>
                             </div>
                             <div className='add-textarea'>
-                                <Input.TextArea required rows={5} name='description_ru' placeholder='Полное описание (рус.)' value={newItem?.description_ru} onChange={handleAddChange} />
+                                <Input.TextArea required rows={7} name='description_ru' placeholder='Полное описание (рус.)' value={newItem?.description_ru} onChange={handleAddChange} />
                             </div>
                             <div className='add-textarea'>
-                                <Input.TextArea required rows={5} name='description_tm' placeholder='Полное описание (туркм.)' value={newItem?.description_tm} onChange={handleAddChange} />
+                                <Input.TextArea required rows={7} name='description_tm' placeholder='Полное описание (туркм.)' value={newItem?.description_tm} onChange={handleAddChange} />
                             </div>
                             <div className='add-textarea'>
-                                <Input.TextArea required rows={5} name='description_en' placeholder='Полное описание (анг.)' value={newItem?.description_en} onChange={handleAddChange} />
+                                <Input.TextArea required rows={7} name='description_en' placeholder='Полное описание (анг.)' value={newItem?.description_en} onChange={handleAddChange} />
                             </div>
                         </div>
                     </div>
