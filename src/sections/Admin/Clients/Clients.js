@@ -311,7 +311,7 @@ function Clients() {
             />
             <div className='page'>
                 <div className='page-header-content'>
-                    <h2>Клиенты</h2>
+                    <h2 className='admin-section-name'>Клиенты</h2>
                     <div className='add-button' onClick={showAddModal}>Добавить</div>
                 </div>
                 <div className='users-header-filters'>

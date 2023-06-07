@@ -9,4 +9,5 @@
 .sidebar-outlet {
     display: flex;
     flex-direction: row;
+    height: 100%;
 }

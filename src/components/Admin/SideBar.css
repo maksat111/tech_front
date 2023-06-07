@@ -1,5 +1,6 @@
 .sidebar_container {
-    height: calc(100vh - 88px);
+    /* height: calc(100vh - 88px); */
+    height: 100%;
     padding: 10px 10px 10px;
     overflow: auto;
     overflow-x: hidden;
@@ -12,7 +13,8 @@
     text-align: center;
     transition: 0.4s;
     width: 120px;
-    height: calc(100vh - 88px);
+    /* height: calc(100vh - 88px); */
+    height: 100%;
     padding: 10px;
     overflow: auto;
     overflow-x: hidden;

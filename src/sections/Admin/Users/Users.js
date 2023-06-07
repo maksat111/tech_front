@@ -311,7 +311,7 @@ function Users() {
             />
             <div className='page'>
                 <div className='page-header-content'>
-                    <h2>Пользователи</h2>
+                    <h2 className='admin-section-name'>Пользователи</h2>
                     <div className='add-button' onClick={showAddModal}>Добавить</div>
                 </div>
                 <div className='users-header-filters'>

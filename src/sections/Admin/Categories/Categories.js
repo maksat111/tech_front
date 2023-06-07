@@ -324,7 +324,7 @@ function Categories() {
             />
             <div className='page'>
                 <div className='page-header-content'>
-                    <h2>Категории</h2>
+                    <h2 className='admin-section-name'>Категории</h2>
                     <div className='add-button' onClick={showAddModal}>Добавить</div>
                 </div>
                 <div className='categories-header-filters'>

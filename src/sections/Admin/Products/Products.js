@@ -196,9 +196,13 @@ function Products() {
         setAddOpen(true);
     };
 
-    const handleAddOk = async () => {
+    const handleAddOk = async (e) => {
+        e.preventDefault();
         try {
             setConfirmLoading(true);
+            if (newItemCategory.length === 0 || newItemSubCategory.length === 0 || newItemBrand.length === 0) {
+                return message.error('Все поля обязательны для заполнения!');
+            }
             const formData = new FormData();
             fileList[0] && formData.append("main_image", fileList[0].originFileObj, fileList[0].originFileObj.name);
             formData.append("name_ru", newItem.name_ru);
@@ -415,6 +419,7 @@ function Products() {
                 open={addOpen}
                 onOk={handleAddOk}
                 confirmLoading={confirmLoading}
+                footer={false}
                 onCancel={handleAddCancel}
                 cancelText={'Отмена'}
                 okText={'Да'}
@@ -422,111 +427,118 @@ function Products() {
                 okType={'primary'}
                 style={{ top: '20px', bottom: '0px' }}
             >
-                <div className='banner-add-container'>
-                    <div className='add-left'>
-                        <div className='add-column'>
-                            Название (рус.):
+                <form onSubmit={handleAddOk}>
+                    <div className='banner-add-container'>
+                        <div className='add-left'>
+                            <div className='add-column'>
+                                Название (рус.):
+                            </div>
+                            <div className='add-column'>
+                                Название (туркм.):
+                            </div>
+                            <div className='add-column'>
+                                Навзание (анг.):
+                            </div>
+                            <div className='add-column'>
+                                Категория:
+                            </div>
+                            <div className='add-column'>
+                                Подкатегория:
+                            </div>
+                            <div className='add-column'>
+                                Бренд:
+                            </div>
+                            <div className='add-picture'>
+                                Главный изображения
+                            </div>
+                            <div className='add-textarea'>
+                                Полное описание (рус.):
+                            </div>
+                            <div className='add-textarea'>
+                                Полное описание (туркм.):
+                            </div>
+                            <div className='add-textarea'>
+                                Полное описание (анг.):
+                            </div>
                         </div>
-                        <div className='add-column'>
-                            Название (туркм.):
-                        </div>
-                        <div className='add-column'>
-                            Навзание (анг.):
-                        </div>
-                        <div className='add-column'>
-                            Категория:
-                        </div>
-                        <div className='add-column'>
-                            Подкатегория:
-                        </div>
-                        <div className='add-column'>
-                            Бренд:
-                        </div>
-                        <div className='add-picture'>
-                            Главный изображения
-                        </div>
-                        <div className='add-textarea'>
-                            Полное описание (рус.):
-                        </div>
-                        <div className='add-textarea'>
-                            Полное описание (туркм.):
-                        </div>
-                        <div className='add-textarea'>
-                            Полное описание (анг.):
+                        <div className='add-right'>
+                            <div className='add-column'>
+                                <Input required name='name_ru' placeholder='Название (рус.)' value={newItem?.name_ru} onChange={handleAddChange} />
+                            </div>
+                            <div className='add-column'>
+                                <Input required name='name_tm' placeholder='Название (туркм.)' value={newItem?.name_tm} onChange={handleAddChange} />
+                            </div>
+                            <div className='add-column'>
+                                <Input required name='name_en' placeholder='Название (анг.)' value={newItem?.name_en} onChange={handleAddChange} />
+                            </div>
+                            <div className='add-column'>
+                                <Select
+                                    value={newItemCategory}
+                                    showSearch
+                                    allowClear
+                                    style={{
+                                        width: '100%',
+                                    }}
+
+                                    placeholder="Выберите категорию"
+                                    onChange={(e) => handleUpdateSelectChange(e)}
+                                    options={selectOptions}
+                                />
+                            </div>
+                            <div className='add-column'>
+                                <Select
+                                    value={newItemSubCategory}
+                                    showSearch
+                                    allowClear
+                                    style={{
+                                        width: '100%',
+                                    }}
+                                    placeholder="Выберите подкатегорию"
+                                    onChange={(e) => handleSubcategoryChange(e)}
+                                    options={subcategoryOptions}
+                                />
+                            </div>
+                            <div className='add-column'>
+                                <Select
+                                    value={newItemBrand}
+                                    showSearch
+                                    allowClear
+                                    style={{
+                                        width: '100%',
+                                    }}
+                                    placeholder="Выберите Бренд"
+                                    onChange={(e) => handleBrandChange(e)}
+                                    options={brandOptions}
+                                />
+                            </div>
+                            <div className='add-picture'>
+                                {newItem?._id && <img className='subcategory-image' src={'http://127.0.0.1:5000/' + newItem?.main_image} alt={newItem?.name_ru} />}
+                                <Upload
+                                    customRequest={handleAddCustomRequest}
+                                    listType="picture-card"
+                                    fileList={fileList}
+                                    onPreview={handlePreview}
+                                    onChange={handleChange}
+                                >
+                                    {fileList.length == 0 && uploadButton}
+                                </Upload>
+                            </div>
+                            <div className='add-textarea'>
+                                <Input.TextArea required rows={5} name='description_ru' placeholder='Полное описание (рус.)' value={newItem?.description_ru} onChange={handleAddChange} />
+                            </div>
+                            <div className='add-textarea'>
+                                <Input.TextArea required rows={5} name='description_tm' placeholder='Полное описание (туркм.)' value={newItem?.description_tm} onChange={handleAddChange} />
+                            </div>
+                            <div className='add-textarea'>
+                                <Input.TextArea required rows={5} name='description_en' placeholder='Полное описание (анг.)' value={newItem?.description_en} onChange={handleAddChange} />
+                            </div>
                         </div>
                     </div>
-                    <div className='add-right'>
-                        <div className='add-column'>
-                            <Input name='name_ru' placeholder='Название (рус.)' value={newItem?.name_ru} onChange={handleAddChange} />
-                        </div>
-                        <div className='add-column'>
-                            <Input name='name_tm' placeholder='Название (туркм.)' value={newItem?.name_tm} onChange={handleAddChange} />
-                        </div>
-                        <div className='add-column'>
-                            <Input name='name_en' placeholder='Название (анг.)' value={newItem?.name_en} onChange={handleAddChange} />
-                        </div>
-                        <div className='add-column'>
-                            <Select
-                                value={newItemCategory}
-                                showSearch
-                                allowClear
-                                style={{
-                                    width: '100%',
-                                }}
-                                placeholder="Выберите категорию"
-                                onChange={(e) => handleUpdateSelectChange(e)}
-                                options={selectOptions}
-                            />
-                        </div>
-                        <div className='add-column'>
-                            <Select
-                                value={newItemSubCategory}
-                                showSearch
-                                allowClear
-                                style={{
-                                    width: '100%',
-                                }}
-                                placeholder="Выберите подкатегорию"
-                                onChange={(e) => handleSubcategoryChange(e)}
-                                options={subcategoryOptions}
-                            />
-                        </div>
-                        <div className='add-column'>
-                            <Select
-                                value={newItemBrand}
-                                showSearch
-                                allowClear
-                                style={{
-                                    width: '100%',
-                                }}
-                                placeholder="Выберите Бренд"
-                                onChange={(e) => handleBrandChange(e)}
-                                options={brandOptions}
-                            />
-                        </div>
-                        <div className='add-picture'>
-                            {newItem?._id && <img className='subcategory-image' src={'http://127.0.0.1:5000/' + newItem?.main_image} alt={newItem?.name_ru} />}
-                            <Upload
-                                customRequest={handleAddCustomRequest}
-                                listType="picture-card"
-                                fileList={fileList}
-                                onPreview={handlePreview}
-                                onChange={handleChange}
-                            >
-                                {fileList.length == 0 && uploadButton}
-                            </Upload>
-                        </div>
-                        <div className='add-textarea'>
-                            <Input.TextArea rows={5} name='description_ru' placeholder='Полное описание (рус.)' value={newItem?.description_ru} onChange={handleAddChange} />
-                        </div>
-                        <div className='add-textarea'>
-                            <Input.TextArea rows={5} name='description_tm' placeholder='Полное описание (туркм.)' value={newItem?.description_tm} onChange={handleAddChange} />
-                        </div>
-                        <div className='add-textarea'>
-                            <Input.TextArea rows={5} name='description_en' placeholder='Полное описание (анг.)' value={newItem?.description_en} onChange={handleAddChange} />
-                        </div>
+                    <div className='admin-footer'>
+                        <button className='footer-cancel' onClick={handleAddCancel}>Отмена</button>
+                        <button className='footer-ok' onClick={handleAddOk}>Да</button>
                     </div>
-                </div>
+                </form>
             </Modal>
             <Modal
                 title="Вы уверены, что хотите удалить?"
@@ -544,7 +556,7 @@ function Products() {
             />
             <div className='page'>
                 <div className='page-header-content'>
-                    <h2>{`Товары`}</h2>
+                    <h2 className='admin-section-name'>{`Товары`}</h2>
                     <div className='add-button' onClick={showAddModal}>Добавить</div>
                 </div>
                 <div className='subcategories-header-filters'>

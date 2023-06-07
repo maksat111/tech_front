@@ -420,7 +420,7 @@ function Subcategories() {
             <div className='page'>
                 <div className='page-header-content'>
                     {/* <h2>{`Подкатегории (${total})`}</h2> */}
-                    <h2>{`Подкатегории`}</h2>
+                    <h2 className='admin-section-name'>{`Подкатегории`}</h2>
                     <div className='add-button' onClick={showAddModal}>Добавить</div>
                 </div>
                 <div className='subcategories-header-filters'>
