@@ -1,12 +1,13 @@
 .pageLoading-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    /* width: 95vw; */
-    height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  /* width: 95vw; */
+  height: 90vh;
 }
 
-.pageLoading-container>img {
-    height: 270px;
+.pageLoading-container > img {
+  height: 150px;
+  margin-bottom: 60px;
 }

@@ -1,21 +1,24 @@
-import axios from 'axios';
-import { getToken } from '../utils/getToken';
+import axios from "axios";
+import { getToken } from "../utils/getToken";
 
 const token = getToken();
-const BASE_URL = 'http://127.0.0.1:5000/api/';
+const BASE_URL = "http://127.0.0.1:5000/api/";
 
 const axiosInstance = axios.create({
-    baseURL: BASE_URL,
-    timeout: 60000,
-    headers: {
-        'Content-Type': 'multipart/form-data',
-        'Accept': "application/json",
-        "x-access-token": `${token}`
-    }
+  baseURL: BASE_URL,
+  timeout: 60000,
+  headers: {
+    "Content-Type": "multipart/form-data",
+    Accept: "application/json",
+    "x-access-token": `${token}`,
+  },
 });
 
-const loginPost = async (username, password) => {
-    const res = await axios.post(`${BASE_URL}admin/auth/login`, { username, password });
-    return res;
-}
-export { axiosInstance, loginPost } 
+const loginPost = async (email, password) => {
+  const res = await axios.post(`${BASE_URL}admin/auth/login`, {
+    email,
+    password,
+  });
+  return res;
+};
+export { axiosInstance, loginPost };

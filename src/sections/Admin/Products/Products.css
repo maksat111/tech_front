@@ -1,39 +1,48 @@
 .add-right {
-    width: 500px;
+  width: 500px;
 }
 
 .add-column {
-    display: flex;
-    align-items: center;
-    padding: 5px 0;
-    height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+  height: 50px;
 }
 
 .add-textarea {
-    display: flex;
-    align-items: center;
-    height: 170px;
-    text-align: center;
+  display: flex;
+  align-items: center;
+  height: 170px;
+  text-align: center;
 }
 
 .admin-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    padding: 10px 15px 0 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  padding: 10px 15px 0 0;
 }
 
 .footer-cancel {
-    color: grey;
-    padding: 5px 10px;
-    border-radius: 7px;
-    border: rgb(170, 170, 170) 1px solid;
+  color: grey;
+  padding: 5px 10px;
+  border-radius: 7px;
+  border: rgb(170, 170, 170) 1px solid;
 }
 
 .footer-ok {
-    padding: 5px 20px;
-    border-radius: 7px;
-    background-color: blue;
-    color: white;
+  padding: 5px 20px;
+  border-radius: 7px;
+  background-color: blue;
+  color: white;
+}
 
+.category-image {
+  width: 250px;
+  height: 150px;
+}
+
+.category-image-edit {
+  width: 250px;
+  height: 150;
 }
