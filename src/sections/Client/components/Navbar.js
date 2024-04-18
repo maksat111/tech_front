@@ -15,9 +15,11 @@ import turkmen from "../../../images/turkmen.png";
 import russian from "../../../images/russian.png";
 import english from "../../../images/english.png";
 import "./Navbar.css";
+import { useNavigate } from "react-router-dom";
 
-function Navbar(props) {
+function Navbar({ searchPress }) {
   const [active, setActive] = useState(1);
+  const [value, setValue] = useState("");
   const { sebedim, Increment, Decrement, Remove } = useContext(SebedimContext);
   const [numberProduct, setNumberProduct] = useState(0);
   const [total, setTotal] = useState({});
@@ -45,11 +47,14 @@ function Navbar(props) {
     Decrement(id, sany);
   };
 
+  const navigate = useNavigate();
+
   const items = [
     {
       id: 1,
       text_tm: "Esasy",
       text_en: "Home",
+      href: "/",
     },
     {
       id: 2,
@@ -100,7 +105,8 @@ function Navbar(props) {
   ];
 
   const handleClick = (item) => {
-    setActive(item);
+    setActive(item.id);
+    navigate(item.href);
   };
 
   const handleLanguageChange = (e) => {
@@ -120,6 +126,14 @@ function Navbar(props) {
 
   // const baha = sebedim[0] ? sebedim[0].baha.split(" ") : [0];
   // const jemi = sebedim[0]?.sany * baha[0];
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  const handleSearchClick = () => {
+    searchPress(value);
+  };
 
   return (
     <>
@@ -142,12 +156,17 @@ function Navbar(props) {
             </div>
             <div className="px-[10px] py-[5px] w-[100%]">
               <input
+                value={value}
+                onChange={handleChange}
                 className="placeholder:text-sm w-[100%] outline-none"
                 type="text"
                 placeholder="Search entire here"
               />
             </div>
-            <div className="bg-[#1d1d1d] text-white hover:text-[#146cda] cursor-pointer h-full flex items-center rounded-r-[7px] px-[20px]">
+            <div
+              className="bg-[#1d1d1d] text-white hover:text-[#146cda] cursor-pointer h-full flex items-center rounded-r-[7px] px-[20px]"
+              onClick={handleSearchClick}
+            >
               <BsSearch className=" text-[18px]" />
             </div>
           </div>
@@ -211,7 +230,7 @@ function Navbar(props) {
                 className={`${
                   active == item.id ? "text-[#146CDA]" : "text-black"
                 } cursor-pointer hover:text-[#146CDA]`}
-                onClick={() => handleClick(item.id)}
+                onClick={() => handleClick(item)}
               >
                 {item.text_tm}
               </p>

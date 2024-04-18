@@ -1,15 +1,17 @@
 import { useContext } from "react";
+import { SebedimContext } from "../../context/context";
 import BannerSlider from "./components/BannerSlider";
 import image1 from "../../images/1.webp";
 import image2 from "../../images/2.webp";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../../config/axios";
-import { SebedimContext } from "../../context/context";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [products, setProducts] = useState(null);
   const [categories, setCategories] = useState(null);
   const [banners, setBanners] = useState(null);
+  const navigate = useNavigate();
 
   const { sebedim, Increment, Decrement, AddTo } = useContext(SebedimContext);
 
@@ -31,7 +33,15 @@ const Home = () => {
       .then((res) => setBanners(res.data.data))
       .catch((err) => console.log(err));
   }, []);
-  const slides = [image1, image2];
+
+  const handleCategoryClick = (item) => {
+    navigate(`/category/${item._id}`);
+  };
+
+  const handleProductClick = (item) => {
+    navigate(`/product/${item._id}`);
+  };
+
   return (
     <>
       <div>
@@ -44,7 +54,10 @@ const Home = () => {
         </div>
         <div className="grid grid-cols-5 gap-[15px]">
           {categories?.map((item) => (
-            <div className="group border-[1px] rounded-[20px] p-[20px] mt-[20px] bg-[#fafafa] cursor-pointer">
+            <div
+              className="group border-[1px] rounded-[20px] p-[20px] mt-[20px] bg-[#fafafa] cursor-pointer"
+              onClick={() => handleCategoryClick(item)}
+            >
               <div className="w-full h-[100px]">
                 <img
                   className="group-hover:scale-105 transition-all duration-100 w-full h-full object-cover"
@@ -64,7 +77,10 @@ const Home = () => {
         </div>
         <div className="grid grid-cols-3 gap-[25px]">
           {products?.map((item) => (
-            <div className="border-[1px] rounded-[20px] p-[20px] mt-[20px]">
+            <div
+              className="border-[1px] rounded-[20px] p-[20px] mt-[20px] cursor-pointer"
+              onClick={() => handleProductClick(item)}
+            >
               <div className="w-full h-[180px]">
                 <img
                   className="w-full h-full object-cover"

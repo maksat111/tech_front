@@ -19,6 +19,10 @@ const SideBarNavbar = lazy(() => import("./SidebarNavbar"));
 //Client
 const Navbar = lazy(() => import("./ClientNavbar"));
 const Home = lazy(() => import("../sections/Client/Home"));
+const CategoryDetails = lazy(() =>
+  import("../sections/Client/CategoryDetails")
+);
+const ProductDetails = lazy(() => import("../sections/Client/ProductDetails"));
 
 function Router() {
   let routes = useRoutes([
@@ -36,6 +40,22 @@ function Router() {
             </Suspense>
           ),
           path: "/",
+        },
+        {
+          element: (
+            <Suspense fallback={<Loading />}>
+              <CategoryDetails />
+            </Suspense>
+          ),
+          path: "/category/:id",
+        },
+        {
+          element: (
+            <Suspense fallback={<Loading />}>
+              <ProductDetails />
+            </Suspense>
+          ),
+          path: "/product/:id",
         },
       ],
     },
